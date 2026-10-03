@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<title>Sewer Tycoon Jr. by the Digital Water Lab</title>
+<style>
+:root{
+  --wall:#E4E3DF; --sign:#000; --ink:#fff; --mute:#A9AAAD; --rule:#fff; --dim:#262626;
+  --t1:#8E54D9; --t2:#2C67D6; --t3:#1A9A47; --t4:#F2701E; --tt:#5FB0E6; --river:#8FB8DE; --note:#FFC425; --bad:#FF4B3E; --good:#9BE7A9;
+  --page-ink:#000;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --wall:#000; --page-ink:#fff; } }
+:root[data-theme="dark"]{ --wall:#000; --page-ink:#fff; }
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--wall);color:var(--ink);font-family:"Helvetica Neue",Helvetica,"Nimbus Sans",Arial,sans-serif;font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+main{max-width:1000px;margin:0 auto;padding:16px 12px 48px}
+.sign{background:var(--sign);border-top:6px solid var(--rule);margin:0 0 14px;padding:18px 18px 22px}
+h1{font-size:clamp(44px,10vw,84px);line-height:.92;letter-spacing:-.035em;margin:8px 0 12px;font-weight:700}
+h2{font-size:clamp(24px,4.6vw,34px);letter-spacing:-.02em;line-height:1.05;margin:0 0 10px;font-weight:700}
+h3{font-size:18px;margin:16px 0 6px;font-weight:700;letter-spacing:-.01em}
+p{margin:0 0 10px;max-width:68ch}
+.mute{color:var(--mute)}.small{font-size:13px}
+.bullet{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;font-weight:700;font-size:17px;color:#fff;flex:none}
+.b1{background:var(--t1)}.b2{background:var(--t2)}.b3{background:var(--t3)}.b4{background:var(--t4)}.bw{background:#fff;color:#000}.bn{background:var(--note);color:#000}
+.lede{font-size:clamp(18px,3vw,22px);max-width:40ch;margin-bottom:18px}
+.line{position:relative;display:grid;grid-template-columns:repeat(4,1fr);margin:22px 0 4px}
+.line::before{content:"";position:absolute;left:12.5%;right:12.5%;top:14px;height:6px;background:#fff}
+.stop{position:relative;text-align:center;background:none;border:0;color:#fff;font:inherit;cursor:pointer;padding:0 2px}
+.stop .dot{display:block;width:34px;height:34px;margin:0 auto 6px;border-radius:50%;background:#000;border:6px solid #fff;transition:background .25s,transform .25s}
+.stop.on .dot{background:#fff;transform:scale(1.12)}
+.stop b{display:block;font-size:15px}.stop span{display:block;font-size:12px;color:var(--mute)}
+.stop:focus-visible{outline:3px solid var(--note);outline-offset:3px}
+.note{display:flex;gap:10px;align-items:flex-start;margin:12px 0;padding:10px 12px;background:#1B1704;color:#FFE9A8;font-size:14px;line-height:1.45}
+.note .bullet{width:22px;height:22px;font-size:12px}
+.note p{margin:0 0 6px;max-width:none}.note p:last-child{margin:0}.note b{color:var(--note)}
+.note table{border-collapse:collapse;font-size:13px;margin:6px 0;font-variant-numeric:tabular-nums}
+.note td,.note th{padding:3px 8px 3px 0;text-align:left;border-bottom:1px solid #3a3214}
+body.nonotes .note{display:none}
+.toggle{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+button{font:inherit;font-weight:700;font-size:15px;background:#fff;color:#000;border:0;padding:9px 14px;cursor:pointer;border-radius:0;transition:transform .12s}
+button:active{transform:scale(.97)}
+button.ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 2px #fff}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--note);outline-offset:2px}
+button:disabled{opacity:.4;cursor:default}
+.obj{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:10px}
+.obj div{border-top:3px solid #fff;padding-top:8px}.obj b{display:block;font-size:16px}.obj span{font-size:13px;color:var(--mute)}
+.stage{position:relative}
+.s3{position:relative;width:100%;aspect-ratio:640/470;overflow:hidden;touch-action:manipulation;--u:1;--storm:0;--flash:0;border-radius:4px;
+  background:linear-gradient(180deg,#86b3e6 0%,#bcd3ee 46%,#5d7099 78%,#3a4a6b 100%)}
+.s3::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#232c44 0%,#3d4a68 50%,#2a3450 80%,#1f2840 100%);opacity:var(--storm);z-index:0}
+.s3::after{content:"";position:absolute;inset:0;background:#e9f0ff;opacity:calc(var(--flash) * .45);z-index:3;pointer-events:none}
+.s3 canvas{display:block;position:absolute;inset:0;z-index:1}
+#stage3d{aspect-ratio:640/255}
+#tstage{aspect-ratio:640/380}
+@media (max-width:760px){#stage3d{aspect-ratio:640/470}
+  .hudbot{flex-wrap:wrap;border-radius:12px;row-gap:0}.hudbot .grow{flex-basis:100%;height:0}
+  #stage3d .hudtr{top:auto;bottom:6px;right:auto;left:6px;padding:4px 10px;border-radius:10px}
+  #stage3d .hudtr .hl{min-width:0}#stage3d .lab.ovl.zero{display:none}#stage3d .lab.ovl{font-size:10px}#stage3d .lab.riv{font-size:10px}}
+.hudbot{position:absolute;left:10px;right:10px;bottom:8px;z-index:4;background:rgba(14,16,24,.8);color:#fff;border-radius:999px;padding:5px 16px;display:flex;align-items:baseline;gap:6px;white-space:nowrap;font-family:Fredoka,"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:calc(var(--u)*13px)}
+.hudbot .hl{color:#c9cdd6;font-size:calc(var(--u)*12px)}.hudbot b{font-size:calc(var(--u)*18px)}.hudbot .u{color:#c9cdd6}.hudbot .grow{flex:1}.hudbot .scorebig{font-size:calc(var(--u)*20px);letter-spacing:0}.hudbot .delta{height:auto;font-size:calc(var(--u)*12px)}
+.hudbot #runFine{color:#ffb3ab}
+.hudtr{position:absolute;right:12px;top:10px;z-index:4;background:rgba(14,16,24,.78);color:#fff;border-radius:14px;padding:8px 14px;display:grid;gap:2px;font-family:Fredoka,"Helvetica Neue",Helvetica,Arial,sans-serif}
+.hudtr .hrow{display:flex;align-items:baseline;gap:6px;white-space:nowrap}
+.hudtr .hl{font-size:calc(var(--u)*12px);color:#c9cdd6;min-width:calc(var(--u)*86px)}
+.hudtr .scorebig{font-size:calc(var(--u)*30px);letter-spacing:-.02em;line-height:1}
+.hudtr .u{font-size:calc(var(--u)*13px);color:#c9cdd6}
+.hudtr #fineTot{font-size:calc(var(--u)*18px)}
+.hudtr .coin{font-size:calc(var(--u)*13px)}
+.hudtr .delta{font-size:calc(var(--u)*13px);height:auto;margin-left:4px}
+.lab.ovl{background:rgba(14,16,24,.78);color:#fff;font-size:calc(var(--u)*12px);padding:calc(var(--u)*2px) calc(var(--u)*9px);border-radius:999px}
+.lab.ovl.has{color:#ff9a90}.lab.ovl.zero{color:#9BE7A9}
+.lab.nm.cw{background:#2b2f36}
+.s3.no3d + .ctrl + .pensfb,.pensfb.show{display:block!important}
+.ov{position:absolute;inset:0;pointer-events:none;z-index:2;font-family:Fredoka,"Helvetica Neue",Helvetica,Arial,sans-serif}
+.lab{position:absolute;left:0;top:0;white-space:nowrap;font-weight:600;font-size:calc(var(--u)*15px);line-height:1.1;will-change:transform}
+.lab.nm{color:#fff;font-size:calc(var(--u)*13px);padding:calc(var(--u)*4px) calc(var(--u)*11px);border-radius:999px;box-shadow:0 calc(var(--u)*3px) 0 rgba(0,0,0,.35)}
+.lab.c1{background:var(--t1)}.lab.c2{background:var(--t2)}.lab.c3{background:var(--t3)}.lab.c4{background:var(--t4)}
+.lab.nm .ovf{display:inline-block;margin-left:6px;padding:0 6px;border-radius:999px;background:rgba(255,255,255,.92);color:#c42d22;font-size:.85em}
+@keyframes wig{0%,100%{rotate:-3deg}50%{rotate:3deg}}
+.lab.pct{color:#fff;font-size:calc(var(--u)*17px);font-weight:700;background:rgba(20,22,30,.55);padding:calc(var(--u)*2px) calc(var(--u)*7px);border-radius:calc(var(--u)*8px)}
+.lab.rn{background:#fff;color:#1f5fa0;font-weight:700;padding:calc(var(--u)*3px) calc(var(--u)*9px) calc(var(--u)*3px) calc(var(--u)*6px);border-radius:999px;box-shadow:0 calc(var(--u)*3px) 0 rgba(0,0,0,.25);transition:opacity .3s;display:flex;align-items:center;gap:calc(var(--u)*4px)}
+.drop{display:inline-block;width:calc(var(--u)*8px);height:calc(var(--u)*8px);background:#3d93cf;border-radius:50% 50% 50% 0;transform:rotate(-45deg)}
+.lab.vl{display:flex;align-items:center;gap:calc(var(--u)*5px);background:#fff;color:#14161c;font-size:calc(var(--u)*12px);font-weight:700;padding:calc(var(--u)*3px) calc(var(--u)*9px) calc(var(--u)*3px) calc(var(--u)*4px);border-radius:999px;box-shadow:0 calc(var(--u)*3px) 0 rgba(0,0,0,.3)}
+.lab.vl svg{width:calc(var(--u)*26px);height:calc(var(--u)*26px)}.lab.vl svg rect{fill:#14161c}.lab.vl svg circle:first-child{stroke:#d5d8de}
+.lab.riv{color:#1f5fa0;background:#fff;padding:calc(var(--u)*4px) calc(var(--u)*11px);border-radius:999px;font-size:calc(var(--u)*13px);font-weight:700;box-shadow:0 calc(var(--u)*3px) 0 rgba(0,0,0,.3)}
+.lab.riv.over{background:#d8473c;color:#fff}.lab.riv b.bad{color:#fff}
+.lab.hud{transform:none}.lab.hidden{display:none}.hud-l{left:10px;top:auto;bottom:8px;background:rgba(14,16,24,.72);padding:4px 12px;border-radius:999px;color:#fff}.hud-r{left:auto;right:10px;top:8px}
+.hud .hl{display:inline;margin-right:6px;font-size:calc(var(--u)*12px);color:#c9cdd6;font-weight:500}
+#fineNow{font-size:calc(var(--u)*18px);font-weight:700}#fineNow.bad{color:#ff6b5e}
+.hud .coin{font-size:calc(var(--u)*14px)}
+.hud-r svg{width:calc(var(--u)*50px);height:calc(var(--u)*50px);filter:drop-shadow(0 3px 0 rgba(0,0,0,.3))}
+.popf{position:absolute;transform:translate(-50%,-50%);font-weight:600;font-size:calc(var(--u)*13px);opacity:.9;color:#fff;background:#ff3b2e;padding:calc(var(--u)*4px) calc(var(--u)*12px);border-radius:999px;box-shadow:0 calc(var(--u)*4px) 0 #7a0b05;white-space:nowrap;animation:popup 1.5s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes popup{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}14%{opacity:1;transform:translate(-50%,-50%) scale(1.18)}24%{transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-260%) scale(.95)}}
+.lab.fallback{transform:none;left:16px;top:40%;white-space:normal;max-width:80%;font-weight:400}
+.split{display:grid;grid-template-columns:1.25fr 1fr;gap:20px;align-items:start;margin-bottom:8px}
+.scorebig{font-size:clamp(52px,10vw,92px);font-weight:700;letter-spacing:-.045em;line-height:1;font-variant-numeric:tabular-nums;transition:color .4s}
+.scorebig.up{color:var(--good)}.scorebig.down{color:var(--bad)}
+.delta{font-size:15px;font-weight:700;height:20px;transition:opacity .6s}
+.pen{display:grid;grid-template-columns:118px 1fr 56px;gap:8px;align-items:center;font-size:14px;margin:6px 0}
+.pen .bar{height:10px;background:var(--dim);overflow:hidden}.pen .bar i{display:block;height:100%;background:var(--bad);transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.pen .v{text-align:right;font-variant-numeric:tabular-nums}
+.ctrl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+input[type=range]{accent-color:#fff;flex:1;min-width:120px}
+.tt{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;table-layout:fixed;min-width:520px}
+.tt th,.tt td{padding:0;text-align:center;position:relative}
+.tt thead th{font-size:12px;color:var(--mute);font-weight:400;padding-bottom:4px;transition:color .2s}
+.tt thead th.now{color:#fff;font-weight:700}
+.tt th.rowh{width:40px;text-align:left}
+.tt .infl td{font-size:12px;color:var(--river);height:20px}
+.cell{display:block;width:100%;height:72px;border:0;padding:0;background:#141414;color:#fff;cursor:ns-resize;position:relative;font-weight:400;border-right:2px solid #000;border-bottom:2px solid #000;overflow:hidden;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.cell .fill{position:absolute;left:0;right:0;bottom:0;transition:height .22s cubic-bezier(.2,.9,.3,1.25);opacity:.9}
+.r1 .fill{background:var(--t1)}.r2 .fill{background:var(--t2)}.r3 .fill{background:var(--t3)}.r4 .fill{background:var(--t4)}
+.cell .ticks{position:absolute;inset:0;background:linear-gradient(to top,transparent calc(25% - 1px),rgba(255,255,255,.14) calc(25% - 1px),rgba(255,255,255,.14) 25%,transparent 25%,transparent calc(50% - 1px),rgba(255,255,255,.14) calc(50% - 1px),rgba(255,255,255,.14) 50%,transparent 50%,transparent calc(75% - 1px),rgba(255,255,255,.14) calc(75% - 1px),rgba(255,255,255,.14) 75%,transparent 75%)}
+.cell .half{position:absolute;left:0;right:0;height:50%;display:flex;justify-content:center;font-size:12px;color:rgba(255,255,255,.55);z-index:1;transition:background .15s,color .15s}
+.cell .half.up{top:0;align-items:flex-start;padding-top:2px}.cell .half.dn{bottom:0;align-items:flex-end;padding-bottom:1px}
+@media (hover:hover){.cell .half:hover{background:rgba(255,255,255,.1);color:#fff}}
+.cell.max .half.up,.cell.min .half.dn{color:rgba(255,255,255,.12)}
+.cell .pc{position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);font-size:12px;font-weight:700;z-index:2;text-shadow:0 0 3px #000,0 0 2px #000;pointer-events:none}
+.cell .r{position:absolute;top:2px;left:3px;font-size:10px;color:#9fc6ea;z-index:2;pointer-events:none;text-shadow:0 0 3px #000}
+.cell .sp{position:absolute;top:0;left:0;right:0;height:6px;background:var(--bad);display:none;z-index:3;box-shadow:0 1px 0 #000}
+.cell.spill .sp{display:block}
+.cell .bp{position:absolute;bottom:0;left:0;right:0;height:6px;display:none;z-index:3;background:repeating-linear-gradient(90deg,var(--bad) 0 6px,#000 6px 9px)}
+.cell.byp .bp{display:block}
+.cell.nope{animation:nope .3s}
+@keyframes nope{25%{transform:translateY(-3px)}75%{transform:translateY(3px)}}
+.spk{display:inline-block;width:22px;height:6px;background:var(--bad)}.bpk{display:inline-block;width:22px;height:6px;background:repeating-linear-gradient(90deg,var(--bad) 0 6px,#000 6px 9px);outline:1px solid #333}
+.how{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:6px 0 10px;font-size:14px}
+.how .demo{display:flex;gap:3px;align-items:flex-end}
+.how .demo span{display:block;width:44px;height:40px;background:#141414;position:relative;overflow:hidden}
+.how .demo span i{position:absolute;left:0;right:0;bottom:0;background:var(--t3)}
+.how .demo span b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;text-shadow:0 0 3px #000}
+.mm{display:inline-block;width:calc(var(--u)*9px);height:calc(var(--u)*22px);background:#d5d8de;border-radius:2px;position:relative;overflow:hidden}
+.mm i{position:absolute;left:0;right:0;bottom:0}
+.cell.now{box-shadow:inset 0 0 0 2px #fff}
+.cell.pop{animation:pop .25s}
+@keyframes pop{50%{transform:scale(.88)}}
+.ttwrap{overflow-x:auto;margin:0 -4px;padding:0 4px}
+.panel{display:none}.panel.on{display:block;animation:fadein .35s}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}}
+.data{border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums;width:100%}
+.data th,.data td{border-bottom:1px solid #333;padding:5px 6px;text-align:right}
+.data th:first-child,.data td:first-child{text-align:left}.data .warn{color:var(--bad);font-weight:700}
+textarea{width:100%;min-height:130px;background:#111;color:#fff;border:2px solid #444;font:13px/1.4 "Helvetica Neue",Helvetica,Arial,sans-serif;padding:8px}
+input.code{width:100%;background:#111;color:#fff;border:2px solid #444;font:15px "Helvetica Neue",Helvetica,Arial,sans-serif;padding:8px;letter-spacing:.03em}
+.log{background:#0D0D0D;border-top:3px solid #fff;height:170px;overflow:auto;font-size:13px;padding:8px;font-variant-numeric:tabular-nums}
+.log div{white-space:pre}.log .keep{color:var(--good)}
+.board{width:100%;border-collapse:collapse;font-size:15px}
+.board td{padding:8px 4px;border-bottom:1px solid #333}
+.board td:last-child{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.board tr.flash td{animation:flash 1s}
+@keyframes flash{0%{background:#1d3b24}100%{background:transparent}}
+.ladder{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ladder div{border-top:3px solid #fff;padding-top:8px;font-size:14px}.ladder b{display:block;font-size:16px;margin-bottom:4px}
+.err{color:var(--bad);font-size:13px;min-height:18px}.toast{color:var(--good);font-size:13px;min-height:18px}
+.coin{white-space:nowrap}.coin i{display:inline-block;width:1.55em;height:.78em;background:currentColor;vertical-align:-.04em;margin:0 .04em}
+.fineline{font-size:15px;margin-top:2px}.fineline b{font-variant-numeric:tabular-nums}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;margin:4px 0 10px}.legend span{display:flex;gap:6px;align-items:center}
+.tutgrid{display:grid;grid-template-columns:1.35fr 1fr;gap:20px;align-items:start;margin:8px 0}
+.ctrl.tightc{margin:6px 0}
+.lab.ct{background:var(--tt)}.lab.hudt{transform:none;left:auto;right:10px;top:10px;background:rgba(14,16,24,.72);color:#fff;padding:6px 12px;border-radius:999px;font-size:calc(var(--u)*14px)}
+#tutSvg{display:block;background:linear-gradient(180deg,#86b3e6,#bcd3ee 60%,#d9e5f2);border-radius:4px}
+.tscore{font-size:clamp(44px,8vw,72px);font-weight:700;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}.tscore b.zero{color:var(--good)}
+.goals{list-style:none;padding:0;margin:14px 0 0}
+.codebox{margin-top:14px;border-top:3px solid #fff;padding-top:8px}
+.goals li{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid #333;font-size:15px}
+.goals .tick{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid #666;margin-top:1px;transition:all .25s}
+.goals li.done .tick{background:var(--good);border-color:var(--good);box-shadow:inset 0 0 0 3px #000}
+.goals em{display:block;font-style:normal;color:var(--good);font-size:14px;margin-top:3px}
+.rT .fill{background:var(--tt)}
+@media (max-width:760px){.tutgrid{grid-template-columns:1fr}}
+.legend.tight{margin:6px 0 2px;font-size:13px;color:var(--mute)}
+details.howto{margin:6px 0 4px}details.howto summary{cursor:pointer;font-weight:700;font-size:14px;padding:6px 0}
+#tt .cell{height:54px}
+label.chk{display:flex;gap:6px;align-items:center;font-size:14px}
+footer{color:var(--page-ink);opacity:.6;font-size:13px;padding:8px 2px}
+@media (max-width:760px){
+  .sign{padding:14px 12px 18px}
+  .split{grid-template-columns:1fr}
+  .obj{grid-template-columns:1fr 1fr}.ladder{grid-template-columns:1fr 1fr}
+  .pen{grid-template-columns:100px 1fr 50px}
+}
+@media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} }
+.byline{margin:0 0 10px;font-size:15px;color:var(--mute)}.byline a{color:#fff}
+.steps{font-size:15px;max-width:none;color:#ddd}.steps b{color:#fff}
+pre.cmd{background:#111;border-left:3px solid #fff;padding:10px 12px;overflow-x:auto;font-size:13px;line-height:1.5}
+code{background:#1a1a1a;padding:1px 5px}
+.refs{padding-left:18px}.refs li{margin:0 0 10px;max-width:80ch;font-size:15px}.refs a{color:#9fd0ff}
+footer a{text-decoration:underline}
+.subgrid{display:grid;grid-template-columns:2fr 1fr;gap:10px;margin:10px 0 2px}.subgrid label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute)}
+select.code{appearance:auto}
+a.btn{display:inline-block;font-weight:700;font-size:15px;background:#fff;color:#000;padding:9px 14px;text-decoration:none}
+a.btn[aria-disabled="true"]{opacity:.4;pointer-events:none}
+@media (max-width:760px){.subgrid{grid-template-columns:1fr}}
+#tutTT th.rowh{width:78px}.rh{display:inline-flex;align-items:center;gap:5px}.ico{width:20px;height:20px;flex:none}
+p.objective{max-width:none;font-size:15px;color:#ddd;margin:0 0 12px}p.objective b{color:#fff}
+.codebox.sys{max-width:640px}
+.line.three{grid-template-columns:repeat(3,1fr)}.line.three::before{left:16.67%;right:16.67%}
+#brief{min-height:90px}#toolsPrompt,#loopPrompt{min-height:190px}
+details.fullprob{margin:0 0 12px;border-top:1px solid #333;border-bottom:1px solid #333;padding:4px 0}
+details.fullprob summary{cursor:pointer;font-weight:700;padding:6px 0}
+.probtext{font-size:15px;max-width:80ch;color:#ddd}.probtext ul{padding-left:20px;margin:0 0 10px}.probtext li{margin:0 0 6px}.probtext p{max-width:none}
+#tt th.rowh{width:92px}#tt tr.infl td,#tt tr.infl th{vertical-align:middle;height:26px;padding-top:4px}#tt .rh .ico{width:18px;height:18px}
+a.dl{color:#9fd0ff;font-weight:700}
+</style>
+</head>
+<body>
+<main>
+
+<section class="sign" aria-labelledby="title">
+  <div style="display:flex;gap:6px"><span class="bullet b1">1</span><span class="bullet b2">2</span><span class="bullet b3">3</span><span class="bullet b4">4</span></div>
+  <h1 id="title">Sewer Tycoon Jr.</h1>
+  <p class="byline">by <a href="https://www.digitalwaterlab.org" target="_blank" rel="noopener">DigitalWaterLab.org</a> &middot; IWA World Water Congress 2026, Glasgow</p>
+  <p class="lede"><b>A storm is hitting Glasgow.</b> Twelve hours of rain on a combined sewer: four storage tanks, one treatment works, one river. Set the valves hour by hour and keep the overflow out of the Clyde.</p>
+  <p class="steps"><b>1.</b> Learn the game on one tank. <b>2.</b> Play the full system. <b>3.</b> Bring in AI, level by level: basic prompting, agentic tool use, then an automated research loop. <b>4.</b> Submit your plan.</p>
+  </section>
+
+
+<section class="sign" aria-labelledby="tuth">
+  <h2 id="tuth">Learn the game</h2>
+  <p style="margin-bottom:6px;max-width:none">Rain fills the tank. Its valve sends water to the treatment works, which can treat <b>20 ML/h</b> (megalitres per hour; 1 ML = 1,000 m³). Water overflows to the river two ways: the tank fills up, or the works gets more than 20 ML/h. <b>Your job: no overflow.</b></p>
+  <div class="how" aria-hidden="true" style="margin:2px 0 8px;flex-wrap:nowrap"><div class="demo"><span><b>Closed</b></span><span><i style="height:25%;background:var(--tt)"></i><b>25%</b></span><span><i style="height:50%;background:var(--tt)"></i><b>50%</b></span><span><i style="height:75%;background:var(--tt)"></i><b>75%</b></span><span><i style="height:100%;background:var(--tt)"></i><b>Open</b></span></div><span class="small">Each cell is the valve for one hour. More bar, more water through. Tap the top half (&#9650;) to open a step, the bottom half (&#9660;) to close. Mouse users can drag; keyboard users use the arrow keys.</span></div>
+  <div class="tutgrid">
+    <div>
+      <div class="s3" id="tstage" role="img" aria-label="3D view of one storm tank, its valve, the treatment works, and the river"><div class="ov" id="tov"></div><div class="hudbot" aria-live="polite"><span class="hl">Overflow so far</span><b id="tRunTot">0.0</b><span class="u">ML</span><span class="hl" style="margin-left:14px">Fine so far</span><b id="tRunFine">0</b><span class="coin" role="img" aria-label="S-coin, redacted">S<i></i>coin</span><span class="grow"></span><span class="hl">Plan total</span><b class="scorebig" id="tPlanTot">0.0</b><span class="u">ML</span></div></div>
+      <svg id="tutSvg" style="display:none" viewBox="0 0 360 250" width="100%" role="img" aria-label="One tank filling with rain, a valve, the treatment works, and the river"></svg>
+      <div class="ctrl tightc"><button id="tPlay" aria-pressed="true">Pause</button><input type="range" id="tHour" min="0" max="12" step="0.01" value="0" aria-label="Tutorial storm time"><span id="tHourLbl" class="small" style="min-width:56px">Hour 1</span></div>
+      <div class="ttwrap"><table class="tt" id="tutTT" aria-label="Valve settings for the single tank"></table></div>
+      <div class="legend tight"><span>Tap &#9650; to open a step, &#9660; to close</span><span><i class="spk"></i>Tank overflows</span><span><i class="bpk"></i>Works overflows</span></div>
+      <div class="ctrl"><button class="ghost" data-tp="0">Close all</button><button class="ghost" data-tp="4">Open all</button><button class="ghost" data-tp="2">All half</button><button id="tAnswer">Show answer</button></div>
+      <p class="small" id="tAnsTxt" style="display:none;color:var(--good)"></p>
+    </div>
+    <div>
+      <div style="display:none"><b id="tSpill">0.0</b><div id="tSplit"></div></div>
+      <div class="mute small">Goals</div>
+      <ol class="goals" id="goals" style="margin-top:4px">
+        <li data-g="0"><span class="tick"></span><div><b>Close every valve.</b> Where does the water go?<em></em></div></li>
+        <li data-g="1"><span class="tick"></span><div><b>Open every valve fully.</b> What happens at the works?<em></em></div></li>
+        <li data-g="2"><span class="tick"></span><div><b>Get the spill to zero.</b><em></em></div></li>
+      </ol>
+      <div class="codebox">
+        <div class="small mute">Your plan as a code (one digit per hour: 0 closed, 1 = 25%, 2 = 50%, 3 = 75%, 4 open)</div>
+        <div class="ctrl" style="margin:4px 0"><input class="code" id="tCode" readonly aria-label="Tutorial plan code" style="flex:1"><button id="tCopy">Copy</button></div>
+        <div class="ctrl" style="margin:4px 0"><input class="code" id="tPaste" placeholder="Paste a 12-digit code" aria-label="Paste a tutorial plan code" style="flex:1" autocomplete="off"><button class="ghost" id="tLoad">Load</button></div>
+        <div class="err" id="tErr" role="alert"></div><div class="toast" id="tToast"></div>
+        <button id="toFull" class="ghost" style="display:none;margin:6px 0 12px">Now try four tanks</button>
+        <p class="small mute" style="margin:2px 0 0">This is what you'll hand in. In the full game the code has four groups of twelve digits, one group per tank, like <span style="white-space:nowrap">222222222222-222222222222-</span><span style="white-space:nowrap">222222222222-222222222222</span>. Copy it into a chat assistant or the submission form, or paste one back in to load it.</p>
+      </div>
+    </div>
+  </div>
+  </section>
+
+<section class="sign" aria-labelledby="simh">
+  <h2 id="simh">The system</h2>
+  <p class="objective">In a combined sewer, rainwater and household sewage share the same pipes, so a big storm can send more than the system can treat. Here, four storage tanks hold the excess and pass it downhill, tank by tank, to a treatment works. The works treats up to 20 ML/h (megalitres per hour) and has no storage, so anything above 20 ML/h at that moment overflows to the river. A full tank overflows too. <b>Goal: as little total overflow as possible.</b> The fine is 100 <span class="coin" role="img" aria-label="S-coin, redacted">S<i></i>coin</span> per ML.</p>
+  <details class="fullprob"><summary>Full problem description</summary>
+  <div class="probtext">
+    <p><b>Real-time control of a combined sewer during a storm</b></p>
+    <p>A combined sewer, where rainwater and sewage share the same pipes, serves four neighbourhoods. It drains downhill through four storage tanks in series: tank 1 at the top, tank 4 at the bottom. Each tank releases flow to the next tank through an outlet valve, and tank 4 releases to a wastewater treatment works.</p>
+    <p><b>Given</b></p>
+    <ul>
+      <li>Storage volumes of tanks 1 to 4: 100, 100, 120 and 150 ML (1 ML = 1,000 m³). When a tank is full, any additional inflow overflows to the river.</li>
+      <li>The treatment works can treat at most 20 ML/h and has no storage. Any flow it receives above 20 ML/h overflows to the river.</li>
+      <li>Each valve can be set once per hour to closed, 25%, 50%, 75% or fully open. The release depends on both the valve setting and how full the tank is: a fully open valve on a full tank releases about 34 ML/h (tanks 1 to 3) or 38 ML/h (tank 4), and less when the tank is lower.</li>
+      <li>A 12-hour storm delivers about 560 ML to the system in total, about 85 ML of which is sewage flow from upstream entering tank 1. Rain runoff peaks at tank 1 around hours 4 to 5 and reaches each tank downhill about an hour later than the one above it.</li>
+    </ul>
+    <p><b>Find</b></p>
+    <ul>
+      <li>(a) A valve schedule for all four tanks over the 12 hours that minimises the total volume overflowed to the river.</li>
+      <li>(b) A short explanation of the strategy, including when and why each tank releases.</li>
+      <li>(c) Any assumptions made, and how the answer would change if the storm arrived an hour earlier than forecast.</li>
+    </ul>
+    <p>Report the schedule as four groups of twelve digits separated by dashes, tank 1 first, one digit per hour (0 = closed, 1 = 25%, 2 = 50%, 3 = 75%, 4 = open), for example 222222222222-222222222222-222222222222-222222222222.</p>
+  </div>
+  <div class="ctrl"><button id="copyProb">Copy problem statement</button><span class="toast" id="probToast"></span></div>
+  </details>
+  <div class="stage">
+    <div class="s3" id="stage3d" role="img" aria-label="3D view of four storm storage tanks stepping down to a wastewater treatment works by the river"><div class="ov" id="ov"></div>
+      <div class="hudbot" aria-live="polite"><span class="hl">Overflow so far</span><b id="runTot">0.0</b><span class="u">ML</span><span class="hl" style="margin-left:14px">Fine so far</span><b id="runFine">0</b><span class="coin" role="img" aria-label="S-coin, redacted">S<i></i>coin</span><span class="grow"></span><span class="hl">Plan total</span><b class="scorebig" id="score">0</b><span class="u">ML</span><span class="delta" id="delta"></span><b id="fineTot" style="display:none">0</b></div>
+    </div>
+    <div class="ctrl tightc">
+      <button id="playBtn" aria-pressed="true">Pause</button>
+      <button class="ghost" id="numBtn" aria-pressed="false">Show details</button>
+      <label class="small mute" for="hour">Hour</label>
+      <input type="range" id="hour" min="0" max="12" step="0.01" value="0" aria-label="Storm time">
+      <span id="hourLbl" class="small" style="min-width:64px">Hour 0</span>
+      <span class="small mute" style="margin-left:auto">Lower is better. Official scores come from the utility's hydraulic model.</span>
+    </div>
+  </div>
+  <div id="pens" class="pensfb" style="display:none"></div>
+  <div class="ttwrap"><table class="tt" id="tt" aria-label="Valve timetable"></table></div>
+  <div class="legend tight"><span>Tap &#9650; to open a step, &#9660; to close</span><span><i class="spk"></i>Tank overflows this hour</span><span><i class="bpk"></i>Works overflows this hour</span></div>
+  <div class="ctrl">
+    <button class="ghost" data-preset="closed">All closed</button>
+    <button class="ghost" data-preset="half">All half open</button>
+    <button class="ghost" data-preset="open">All open</button>
+    <button class="ghost" data-preset="bottom">Bottom first</button>
+    <button class="ghost" data-preset="random">Random</button>
+  </div>
+  <div class="codebox sys">
+    <div class="small mute">Your plan as a code: four groups of twelve digits separated by dashes, tank 1 first, one digit per hour (0 = closed, 1 = 25%, 2 = 50%, 3 = 75%, 4 = open), for example 222222222222-222222222222-222222222222-222222222222.</div>
+    <div class="ctrl" style="margin:4px 0"><input class="code" id="sysCode" readonly aria-label="Your plan code" style="flex:1"><button id="sysCopy">Copy</button></div>
+    <div class="ctrl" style="margin:4px 0"><input class="code" id="sysPaste" placeholder="Paste a plan, e.g. 222222222222-222222222222-222222222222-222222222222" aria-label="Paste a plan code" style="flex:1" autocomplete="off"><button class="ghost" id="sysLoad">Load</button></div>
+    <div class="err" id="sysErr" role="alert"></div><div class="toast" id="sysToast"></div>
+  </div>
+  </section>
+
+
+<section class="sign" aria-labelledby="lvh">
+  <h2 id="lvh">Levels: by hand, then with AI</h2>
+  <p>There are four ways to play. Start by hand, then bring in AI, each level giving it more to work with: your description of the problem, then real data, then the utility's own model. Whatever you or the AI come up with, load it into the system above and watch it play. Pick the level that matches how you got your plan when you submit.</p>
+  <div class="line" role="tablist" aria-label="Levels">
+    <button class="stop on" data-go="0" role="tab"><i class="dot"></i><b>Manual</b><span>Explore by hand</span></button>
+    <button class="stop" data-go="1" role="tab"><i class="dot"></i><b>Basic prompting</b><span>Explain the problem</span></button>
+    <button class="stop" data-go="2" role="tab"><i class="dot"></i><b>Agentic tool use</b><span>Work from data</span></button>
+    <button class="stop" data-go="3" role="tab"><i class="dot"></i><b>Research loop</b><span>Run the model</span></button>
+  </div>
+
+  <div class="panel on" data-panel="0">
+    <h3>Manual: explore by hand</h3>
+    <p>No laptop or AI needed; a phone works. Play with the timetable in the system above while the storm runs. Watch the red marks to see which tank overflows in which hour, nudge the valves around them, and keep any change that lowers the plan total. The quick-set buttons (all half open, bottom first and so on) are good starting points.</p>
+    <p class="mute">Things to notice: opening everything overloads the works, holding everything makes the top tank overflow, and the storm reaches the bottom tanks later than the top ones.</p>
+  </div>
+
+  <div class="panel" data-panel="1">
+    <h3>Basic prompting: work out a strategy</h3>
+    <p>Use any chat assistant the way a student would on a homework problem. Copy the problem statement into the chat, then work with the assistant on a <b>general strategy</b> first: which tanks should drain early, which should hold, and how to keep the works busy without overloading it. Only then turn the strategy into a plan code.</p>
+    <div class="ctrl"><button id="copyBrief">Copy problem statement</button><span class="toast" id="briefToast"></span></div>
+    <p class="mute">The statement gives the volumes, the works capacity and the shape of the storm, but not the hour-by-hour data, so the assistant has to reason rather than calculate. Load its plan in the system above, watch where it overflows, describe that back, and refine together.</p>
+  </div>
+
+  <div class="panel" data-panel="2">
+    <h3>Agentic tool use: work from the data</h3>
+    <p>The utility logs every hour of the storm: rainfall on each catchment, upstream sewer flow, tank levels, valve settings, flows, and overflows. Copy the sensor log for the plan currently loaded in the system, and give it to an assistant that can run code (or open it in a spreadsheet or notebook).</p>
+    <div class="ctrl"><button id="copySensors">Copy sensor log (CSV)</button><span class="toast" id="dataToast"></span></div>
+    <p>Ask it to dig in before it solves anything. For example:</p>
+    <textarea id="toolsPrompt" readonly aria-label="Example prompt for data exploration"></textarea>
+    <div class="ctrl"><button id="copyToolsPrompt">Copy prompt</button><span class="toast" id="toolsToast"></span></div>
+    <p class="mute">Load its suggestion into the system, copy the new sensor log, and go another round.</p>
+  </div>
+
+  <div class="panel" data-panel="3">
+    <h3>Automated research loop: let an agent run the model</h3>
+    <p>The utility has shared its fully calibrated hydraulic model of this sewer. Download the model package (a small zip file), unzip it, and open the folder in Claude Code, Codex, or another coding agent. The package includes instructions the agent will read on its own.</p>
+    <div class="ctrl"><a class="btn" href="https://drive.google.com/file/d/1VHCMO9c7Qy3-oWRa9nNenK3hTpSF-lE_/view?usp=sharing" target="_blank" rel="noopener">Download the model package (.zip)</a></div>
+    <p>Then give it a goal and let it work. For example:</p>
+    <textarea id="loopPrompt" readonly aria-label="Example prompt for a coding agent"></textarea>
+    <div class="ctrl"><button id="copyLoopPrompt">Copy prompt</button><span class="toast" id="loopToast"></span></div>
+    <p class="mute">Agents do best when you let them keep going. If it stops early, ask it to look at where the remaining overflow happens and try again.</p>
+  </div>
+</section>
+
+
+
+<section class="sign" aria-labelledby="rh">
+  <h2 id="rh">The inspiration</h2>
+  <p>Sewer Tycoon Jr. is a small cousin of two Digital Water Lab projects: SewerTycoon, a game-like interface to a real sewer model, and pystorms, a sandbox for testing stormwater control algorithms.</p>
+  <ul class="refs">
+    <li>Schmidt, J., Tobias, M., Loos, S., and Kerkez, B. (2025). Democratizing Sewer Data: Customized Interfaces Allow Non-engineers to Take Action Against Urban Flooding. <i>ACM SIGCAS/SIGCHI Conference on Computing and Sustainable Societies (COMPASS '25)</i>. The research behind <a href="https://www.digitalwaterlab.org/sewertycoon" target="_blank" rel="noopener">SewerTycoon</a>. <a href="https://doi.org/10.1145/3715335.3735480" target="_blank" rel="noopener">doi.org/10.1145/3715335.3735480</a></li>
+    <li>Rimer, S.P., Mullapudi, A., Troutman, S.C., Ewing, G., Bowes, B.D., Akin, A.A., Sadler, J., Kertesz, R., McDonnell, B., Montestruque, L., Hathaway, J., Goodall, J.L., and Kerkez, B. (2023). pystorms: A simulation sandbox for the development and evaluation of stormwater control algorithms. <i>Environmental Modelling &amp; Software</i>, 162, 105635. <a href="https://arxiv.org/abs/2110.12289" target="_blank" rel="noopener">arXiv:2110.12289</a> &middot; <a href="https://pystorms.netlify.app/" target="_blank" rel="noopener">pystorms.netlify.app</a></li>
+  </ul>
+</section>
+
+<section class="sign" aria-labelledby="sh">
+  <h2 id="sh">Submit your plan</h2>
+  <p>Your plan code always matches the timetable in the system above: four groups of twelve digits separated by dashes, tank 1 first, one digit per hour (0 = closed, 1 = 25%, 2 = 50%, 3 = 75%, 4 = open), for example 222222222222-222222222222-222222222222-222222222222.</p>
+  <input class="code" id="planOut" readonly aria-label="Your plan code">
+  <div class="ctrl"><a id="subBtn" class="btn" href="#" target="_blank" rel="noopener" aria-disabled="true">Copy plan and open the form</a><button class="ghost" id="copyPlan">Copy my plan</button><span class="toast" id="planToast"></span></div>
+  <p>The button copies your plan and opens the workshop form in a new tab. Enter your team name, pick your approach (Manual, Basic prompting, Agentic tool use or Research loop), paste the plan into the solution box, and press Submit. You can submit more than once; your best plan counts.</p>
+  <p class="small mute">Every plan is scored with the utility's hydraulic model, and the lowest total overflow wins.</p>
+</section>
+
+<footer>Sewer Tycoon Jr. by the Digital Water Lab, University of Michigan &middot; <a href="https://www.digitalwaterlab.org" target="_blank" rel="noopener" style="color:inherit">digitalwaterlab.org</a>. The sewer network and all numbers are fictional.</footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+/* ---------------- model ---------------- */
+const T=12, L=5;
+const P=[3,8,16,20,12,6,3,1,0,0,0,0].map(x=>x*1.25), AREA=[1.5,1.5,1.5,1], LAG=[0,1,2,3];
+const RAIN=[0,1,2,3].map(i=>Array.from({length:T},(_,t)=>{const k=t-LAG[i];return k>=0&&k<T?Math.round(P[k]*AREA[i]):0;}));
+const INFLOW=[4,6,10,14,12,8,5,3,2,1,1,0].map(x=>Math.round(x*1.25));
+const CFG={cap:[100,100,120,150],qmax:[34,34,34,38],works:20,fine:100,crest:5,cd:0.65,gateH:1};
+const COL=['#8E54D9','#2C67D6','#1A9A47','#F2701E'];
+/* Fast stand-in for the official hydraulic model (same network and inflows; usually within a few ML).
+   Mass balance stepped once a minute; each penstock behaves like a sluice gate (orifice flow, or
+   weir-like flow when the water is below the gate opening). Units: ML and ML/h. */
+const MLH=1000/3600, GRAV=9.81;
+const WIDTH=CFG.qmax.map(q=>q*MLH/(CFG.cd*CFG.gateH*Math.sqrt(2*GRAV*(CFG.crest-CFG.gateH/2))));
+function simulate(V){
+  const S=[0,0,0,0],out=[0,0,0,0,0];let spill=0;const log=[];const SUB=60,dt=1/SUB;
+  for(let t=0;t<T;t++){const inf=[RAIN[0][t]+INFLOW[t],RAIN[1][t],RAIN[2][t],RAIN[3][t]];
+    const rel=[0,0,0,0],fl=[0,0,0,0];let by=0;
+    for(let k=0;k<SUB;k++){const add=inf.map(x=>x*dt);
+      for(let i=0;i<4;i++){S[i]+=add[i];
+        if(S[i]>CFG.cap[i]){const ex=S[i]-CFG.cap[i];fl[i]+=ex;out[i]+=ex;spill+=ex;S[i]=CFG.cap[i];}
+        const ho=V[i][t]/(L-1)*CFG.gateH;
+        if(ho>0&&S[i]>0){const d=CFG.crest*S[i]/CFG.cap[i];
+          const Q=d>=ho?CFG.cd*WIDTH[i]*ho*Math.sqrt(2*GRAV*(d-ho/2)):CFG.cd*WIDTH[i]*d*Math.sqrt(GRAV*d);
+          const q=Math.min(S[i],Q/MLH*dt);S[i]-=q;rel[i]+=q;
+          if(i<3)add[i+1]+=q;else{const b=Math.max(0,q-CFG.works*dt);by+=b;out[4]+=b;spill+=b;}}}}
+    log.push({S:S.slice(),rel,fl,by,fine:(fl[0]+fl[1]+fl[2]+fl[3]+by)*CFG.fine});}
+  return {score:Math.round(spill*10)/10,spill,out,log};
+}
+
+/* ---------------- state ---------------- */
+let V=[0,1,2,3].map(()=>Array(T).fill(0));
+let res=simulate(V), level=0, mine=null;
+const best={0:null,1:null,2:null,3:null};
+const $=id=>document.getElementById(id);
+const code=v=>v.map(r=>r.join('')).join('-');
+function parseCode(s){const d=(s||'').replace(/[^0-4]/g,'');if(d.length!==48)return null;return [0,1,2,3].map(i=>d.slice(i*12,i*12+12).split('').map(Number));}
+async function copy(text,el){try{await navigator.clipboard.writeText(text);el.textContent='Copied';}catch(e){el.textContent='Copy failed. Select the text and copy it manually.';}setTimeout(()=>el.textContent='',2200);}
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------------- timetable ---------------- */
+function buildTable(){let h='<thead><tr><th class="rowh"></th>';
+  for(let t=0;t<T;t++)h+='<th data-h="'+t+'">'+(t+1)+'</th>';
+  h+='</tr></thead><tbody><tr class="infl"><th class="rowh small" style="font-weight:400;color:#9fc6ea"><span class="rh"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="9" width="14" height="6" rx="1.5" fill="#9aa0a6"/><path d="M16 12h5M18 9l3 3-3 3" stroke="#9fc6ea" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Sewage in</span></th>';
+  for(let t=0;t<T;t++)h+='<td>+'+INFLOW[t]+'</td>';h+='</tr>';
+  for(let i=0;i<4;i++){h+='<tr class="infl rainrow"><th class="rowh small" style="font-weight:400;color:#9fc6ea"><span class="rh"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17h10a4 4 0 0 0 .6-7.96A6 6 0 0 0 6.2 9.1 4 4 0 0 0 7 17z" fill="#9fc6ea"/><path d="M9 19l-1 2M13 19l-1 2M17 19l-1 2" stroke="#9fc6ea" stroke-width="1.6" stroke-linecap="round"/></svg>Rain</span></th>';
+    for(let t=0;t<T;t++)h+='<td>+'+RAIN[i][t]+'</td>';h+='</tr>';
+    h+='<tr class="r'+(i+1)+'"><th class="rowh"><span class="rh"><span class="bullet b'+(i+1)+'" style="width:24px;height:24px;font-size:13px">'+(i+1)+'</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4.2" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M12 3v8M8 7h8" stroke="#fff" stroke-width="1.4"/><path d="M12 11v3" stroke="#fff" stroke-width="1.8"/><rect x="2" y="14" width="20" height="6" rx="1.5" fill="#5FB0E6"/><rect x="9" y="13" width="6" height="8" rx="1" fill="#fff"/></svg></span></th>';
+    for(let t=0;t<T;t++)h+='<td><button class="cell" data-i="'+i+'" data-t="'+t+'"><span class="fill"></span><span class="ticks"></span><span class="half up">&#9650;</span><span class="half dn">&#9660;</span><span class="pc"></span><span class="sp"></span><span class="bp"></span></button></td>';
+    h+='</tr>';}
+  $('tt').innerHTML=h+'</tbody>';
+  const tt=$('tt');
+  const setV=(b,nv,anim)=>{const i=+b.dataset.i,t=+b.dataset.t;nv=Math.max(0,Math.min(L-1,nv));
+    if(nv===V[i][t]){if(anim){b.classList.remove('nope');void b.offsetWidth;b.classList.add('nope');}return;}
+    V[i][t]=nv;if(anim){b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');}commit(true);};
+  let drag=null;
+  tt.addEventListener('pointerdown',e=>{const b=e.target.closest('.cell');if(!b)return;
+    drag={b,y:e.clientY,v0:V[+b.dataset.i][+b.dataset.t],moved:false,mouse:e.pointerType==='mouse'||e.pointerType==='pen'};
+    if(drag.mouse){b.setPointerCapture(e.pointerId);e.preventDefault();}});
+  tt.addEventListener('pointermove',e=>{if(!drag||!drag.mouse)return;const dy=drag.y-e.clientY;if(Math.abs(dy)>6)drag.moved=true;
+    if(drag.moved)setV(drag.b,drag.v0+Math.round(dy/14),false);});
+  tt.addEventListener('pointerup',e=>{if(!drag)return;const d=drag;drag=null;if(d.moved)return;
+    const r=d.b.getBoundingClientRect();const up=(e.clientY-r.top)<r.height/2;setV(d.b,V[+d.b.dataset.i][+d.b.dataset.t]+(up?1:-1),true);});
+  tt.addEventListener('pointercancel',()=>{drag=null;});
+  tt.addEventListener('click',e=>{if(e.target.closest('.cell'))e.preventDefault();});
+  tt.addEventListener('keydown',e=>{const b=e.target.closest('.cell');if(!b)return;
+    if(e.key==='ArrowUp'||e.key==='+'){e.preventDefault();setV(b,V[+b.dataset.i][+b.dataset.t]+1,true);}
+    else if(e.key==='ArrowDown'||e.key==='-'){e.preventDefault();setV(b,V[+b.dataset.i][+b.dataset.t]-1,true);}
+    else if(e.key==='Enter'||e.key===' '){e.preventDefault();setV(b,V[+b.dataset.i][+b.dataset.t]+1,true);}});
+}
+function paintTable(){document.querySelectorAll('#tt .cell').forEach(b=>{const i=+b.dataset.i,t=+b.dataset.t,v=V[i][t];
+  b.querySelector('.fill').style.height=(v/(L-1)*100)+'%';
+  b.querySelector('.pc').textContent=v===0?'Closed':v===4?'Open':(v*25)+'%';
+  b.classList.toggle('max',v===L-1);b.classList.toggle('min',v===0);
+  b.setAttribute('aria-label','Tank '+(i+1)+', hour '+(t+1)+', valve '+(v===0?'closed':v===4?'open':(v*25)+' percent open')+(res.log[t].fl[i]>0.01?', overflows':'')+'. Up arrow opens, down arrow closes.');
+  b.classList.toggle('spill',res.log[t].fl[i]>0.01);b.classList.toggle('byp',i===3&&res.log[t].by>0.01);});}
+let lastNow=-1;
+function markNow(h){if(h===lastNow)return;lastNow=h;
+  document.querySelectorAll('#tt thead th[data-h]').forEach(th=>th.classList.toggle('now',+th.dataset.h===h));
+  document.querySelectorAll('#tt .cell').forEach(b=>b.classList.toggle('now',+b.dataset.t===h));}
+
+/* ---------------- score UI ---------------- */
+let shown=0, target=0, prevScore=null;
+function drawPens(){const names=['Tank 1 overflow','Tank 2 overflow','Tank 3 overflow','Tank 4 overflow','Works overflow'];
+  if(!$('pens').children.length)$('pens').innerHTML=names.map((l,k)=>'<div class="pen"><span>'+l+'</span><span class="bar"><i data-k="'+k+'"></i></span><span class="v" data-v="'+k+'"></span></div>').join('');
+  res.out.forEach((x,k)=>{document.querySelector('[data-k="'+k+'"]').style.width=Math.min(100,x/1.2)+'%';document.querySelector('[data-v="'+k+'"]').textContent=x.toFixed(1)+' ML';});
+  $('fineTot').textContent=Math.round(res.spill*CFG.fine).toLocaleString();}
+function drawBoard(flashK){if(!$('board'))return;const names=['Play','Context','Tools','Harness'];
+  $('board').innerHTML=names.map((n,k)=>'<tr'+(k===flashK?' class="flash"':'')+'><td><span class="bullet bw" style="width:22px;height:22px;font-size:12px;margin-right:8px">'+(k+1)+'</span>'+n+'</td><td>'+(best[k]==null?'—':best[k].toFixed(1)+' ML')+'</td></tr>').join('');}
+function commit(byUser,quiet){res=simulate(V);target=res.score;
+  if(prevScore!==null&&!quiet){const d=Math.round((res.score-prevScore)*10)/10;const el=$('delta');if(d){el.textContent=(d>0?'+':'−')+Math.abs(d).toFixed(1)+' ML';el.style.color=d<0?'var(--good)':'var(--bad)';el.style.opacity=1;clearTimeout(el._t);el._t=setTimeout(()=>el.style.opacity=0,1200);
+    const s=$('score');s.classList.remove('up','down');s.classList.add(d<0?'up':'down');clearTimeout(s._t);s._t=setTimeout(()=>s.classList.remove('up','down'),700);}}
+  prevScore=res.score;
+  drawPens();paintTable();drawRiverBars();$('planOut').value=code(V);$('sysCode').value=code(V);
+  if(byUser){const k=level;if(best[k]==null||res.score<best[k]){best[k]=res.score;drawBoard(k);}}
+  if(reduce)renderOnce();}
+function tickScore(){if(shown!==target){const d=target-shown;shown+=Math.abs(d)<0.05?d:d*0.18;$('score').textContent=shown.toFixed(1);}}
+
+/* ---------------- river chart ---------------- */
+function drawRiverBars(){const s=$('riverChart');if(!s)return;const max=40,bw=22,gap=26.5;let g='';
+  for(let t=0;t<T;t++){const q=res.log[t].rel[3],h=Math.min(q,max)/max*96,over=q>CFG.works+0.01;
+    g+='<rect x="'+(4+t*gap)+'" y="'+(100-h)+'" width="'+bw+'" height="'+h+'" fill="'+(over?'#FF4B3E':'#2C67D6')+'" style="transition:all .4s"/>';
+    g+='<text x="'+(15+t*gap)+'" y="116" fill="#A9AAAD" font-size="11" text-anchor="middle">'+(t+1)+'</text>';}
+  const ly=100-CFG.works/max*96;
+  g+='<line x1="0" x2="320" y1="'+ly+'" y2="'+ly+'" stroke="#fff" stroke-width="2"/><line id="rcHead" x1="0" x2="0" y1="0" y2="102" stroke="#FFC425" stroke-width="2"/>';
+  s.innerHTML=g;}
+
+/* ---------------- 3D scene ---------------- */
+const NAMES=['Tank 1','Tank 2','Tank 3','Tank 4'];
+const stage=$('stage3d'), ov=$('ov');
+let playhead=0,playing=!reduce,lastT=0;const HOUR=1.15,HOLD=1.6;
+const ease=x=>x<0?0:x>1?1:x*x*(3-2*x);
+function stateAt(ph){const h=Math.min(T-1,Math.floor(ph)),f=ease(Math.min(1,ph-h));
+  const a=h===0?[0,0,0,0]:res.log[h-1].S,b=res.log[h].S;
+  return {h,f,S:a.map((v,i)=>v+(b[i]-v)*f),rel:res.log[h].rel,fl:res.log[h].fl};}
+function fineAt(ph){let f=0;for(let k=0;k<T;k++){if(k<Math.floor(ph))f+=res.log[k].fine;else if(k===Math.floor(ph))f+=res.log[k].fine*Math.min(1,ph-k);}return f;}
+
+/* overlay labels */
+function mkLab(cls,html){const d=document.createElement('div');d.className='lab '+cls;d.innerHTML=html||'';ov.appendChild(d);return d;}
+const HUD={fine:mkLab('hud hud-l hidden','<span class="hl">Fines so far</span><b id="fineNow">0</b> <span class="coin">S<i></i>coin</span>'),
+  clock:mkLab('hud hud-r','<svg viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="21" fill="rgba(14,16,24,.72)"/><circle cx="24" cy="24" r="17" fill="none" stroke="#555" stroke-width="4"/><circle id="clockArc" cx="24" cy="24" r="17" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-dasharray="0 120" transform="rotate(-90 24 24)"/><text id="clockTxt" x="24" y="29" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">1</text></svg>')};
+
+/* ---------------- river life: fish, reeds, lily pads (shared by both scenes) ---------------- */
+function makeRiverLife(scene,mat,lin,cx,ry,cz,w,d,fs,nf){fs=fs||1;nf=nf||7;
+  const fishes=[],cols=['#ff9a3c','#c9d3dc','#ffcf4a','#e8735a','#9fd0e0'];
+  const eyeM=mat('#111111',{flatShading:false}),whiteM=mat('#ffffff',{flatShading:false});
+  for(let k=0;k<nf;k++){const g=new THREE.Group();const cm=mat(cols[k%cols.length],{roughness:.45,flatShading:false});
+    const body=new THREE.Mesh(new THREE.SphereGeometry(0.16,16,12),cm);body.scale.set(1.25,0.62,0.42);g.add(body);
+    const tail=new THREE.Mesh(new THREE.ConeGeometry(0.1,0.16,4),cm);tail.rotation.z=Math.PI/2;tail.position.x=-0.25;g.add(tail);
+    const fin=new THREE.Mesh(new THREE.ConeGeometry(0.05,0.1,3),cm);fin.position.set(0.02,0.1,0);g.add(fin);
+    const eyes=new THREE.Group(),xs=new THREE.Group();
+    [-1,1].forEach(sd=>{const wh=new THREE.Mesh(new THREE.SphereGeometry(0.035,10,8),whiteM);wh.position.set(0.12,0.03,0.06*sd);eyes.add(wh);
+      const pu=new THREE.Mesh(new THREE.SphereGeometry(0.018,8,6),eyeM);pu.position.set(0.135,0.03,0.085*sd);eyes.add(pu);
+      for(const r of [0.8,-0.8]){const bar=new THREE.Mesh(new THREE.BoxGeometry(0.07,0.014,0.014),eyeM);bar.position.set(0.12,0.03,0.075*sd);bar.rotation.y=0;bar.rotation.z=r;xs.add(bar);}});
+    xs.visible=false;g.add(eyes);g.add(xs);
+    g.scale.setScalar(fs*(0.9+Math.random()*0.4));scene.add(g);
+    fishes.push({g,tail,eyes,xs,ph:Math.random()*Math.PI*2,sp:0.35+Math.random()*0.35,rx:w*(0.25+Math.random()*0.18),rz:d*(0.18+Math.random()*0.12),dz:(Math.random()-.5)*d*0.25,dead:0,delay:Math.random()*0.6});}
+  /* reeds and lily pads */
+  const reedM=mat('#5b8f3a'),reedTop=mat('#7a5a2e'),padM=mat('#4f9a4a',{roughness:.6}),flowerM=mat('#ffd1e6',{emissive:'#40202a',emissiveIntensity:.3});
+  for(let k=0;k<nf*2;k++){const x=cx-w/2+0.15+Math.random()*(w-0.3),z=cz+(Math.random()<.5?-1:1)*(d/2-0.08);const h=0.35+Math.random()*0.35;
+    const r=new THREE.Mesh(new THREE.CylinderGeometry(0.012,0.018,h,5),reedM);r.position.set(x,ry+h/2-0.05,z);r.rotation.z=(Math.random()-.5)*0.3;scene.add(r);
+    if(k%2===0){const tp=new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.03,0.12,6),reedTop);tp.position.set(x,ry+h-0.02,z);scene.add(tp);}}
+  const pads=[];for(let k=0;k<Math.ceil(nf*0.7);k++){const p=new THREE.Mesh(new THREE.CircleGeometry(0.13+Math.random()*0.06,12,0.4,Math.PI*1.8),padM);p.rotation.x=-Math.PI/2;p.position.set(cx-w/2+0.4+Math.random()*(w-0.8),ry+0.03,cz+(Math.random()-.5)*d*0.6);scene.add(p);pads.push(p);
+    if(k%2===0){const fl=new THREE.Mesh(new THREE.IcosahedronGeometry(0.05,0),flowerM);fl.position.set(p.position.x+0.03,ry+0.08,p.position.z);scene.add(fl);pads.push(fl);}}
+  let calm=0;
+  return {update(dt,tt,polluted){calm=polluted?0:calm+dt;
+    fishes.forEach((f,k)=>{const want=polluted?1:(calm>1.4+f.delay?0:f.dead>0?1:0);f.dead+=(want-f.dead)*Math.min(1,dt*(want?2.2:1.2));
+      const alive=1-f.dead;f.ph+=dt*f.sp*alive;
+      const x=cx+Math.cos(f.ph)*f.rx,z=cz+f.dz+Math.sin(f.ph*1.3)*f.rz;
+      const hx=-Math.sin(f.ph)*f.rx,hz=Math.cos(f.ph*1.3)*f.rz*1.3;
+      f.g.position.set(x,ry-0.16*fs+f.dead*0.22*fs+Math.sin(tt*2+k)*0.02*(1+f.dead),z);
+      if(alive>0.05)f.g.rotation.y=Math.atan2(-hz,hx);
+      f.g.rotation.x=f.dead*Math.PI;f.tail.rotation.y=Math.sin(tt*12+k)*0.5*alive;
+      f.eyes.visible=f.dead<0.5;f.xs.visible=f.dead>=0.5;});
+    pads.forEach((p,k)=>{p.position.y=ry+0.03+Math.sin(tt*1.5+k)*0.01;});
+    return fishes.some(f=>f.dead>0.6);}};
+}
+
+let G3=null;let showNums=false;
+function init3D(){
+  if(typeof THREE==='undefined')throw new Error('three missing');
+  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
+  renderer.setClearColor(0x000000,0);
+  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
+  stage.insertBefore(renderer.domElement,ov);
+  const scene=new THREE.Scene();
+  const FOG='#3a4a6b';scene.fog=new THREE.Fog(FOG,30,52);
+  const cam=new THREE.PerspectiveCamera(26,640/255,0.1,120);
+  const CAM0=new THREE.Vector3(1.7,5.6,26.5),LOOK=new THREE.Vector3(1.7,-0.7,1.2);
+  cam.position.copy(CAM0);cam.lookAt(LOOK);
+  const lin=c=>new THREE.Color(c).convertSRGBToLinear();
+  const mat=(c,o)=>{const m=new THREE.MeshStandardMaterial(Object.assign({roughness:.75,metalness:0,flatShading:true},o||{}));m.color=lin(c);if(o&&o.emissive)m.emissive=lin(o.emissive);return m;};
+
+  /* light */
+  const hemi=new THREE.HemisphereLight(lin('#cfe0ff'),lin('#5b4636'),0.95);scene.add(hemi);
+  const sun=new THREE.DirectionalLight(lin('#fff0d8'),1.35);sun.position.set(-6,14,10);sun.castShadow=true;
+  sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-14,right:14,top:12,bottom:-12,near:1,far:45});sun.shadow.bias=-0.0006;sun.shadow.radius=3;scene.add(sun);
+  const fill=new THREE.DirectionalLight(lin('#7fb2ff'),0.45);fill.position.set(10,4,-6);scene.add(fill);
+
+  const X=i=>-4.5+3*i, CX=i=>X(i)+0.5, Gy=i=>1.8-1.2*i, H=1.0, ZT=0.85, RAD=[0.8,0.8,0.88,0.98];
+  const WTOP=Gy(3)-1.2, RIV2=WTOP-0.9, BOT=RIV2-1.4;
+
+  /* rounded slab helper */
+  function slab(w,d,h,r,m){const s=new THREE.Shape();const x=-w/2,y=-d/2;
+    s.moveTo(x+r,y);s.lineTo(x+w-r,y);s.quadraticCurveTo(x+w,y,x+w,y+r);s.lineTo(x+w,y+d-r);s.quadraticCurveTo(x+w,y+d,x+w-r,y+d);s.lineTo(x+r,y+d);s.quadraticCurveTo(x,y+d,x,y+d-r);s.lineTo(x,y+r);s.quadraticCurveTo(x,y,x+r,y);
+    const g=new THREE.ExtrudeGeometry(s,{depth:h,bevelEnabled:true,bevelThickness:.06,bevelSize:.06,bevelSegments:2,curveSegments:6});g.rotateX(-Math.PI/2);
+    const me=new THREE.Mesh(g,m);me.castShadow=true;me.receiveShadow=true;return me;}
+
+  /* island terraces */
+  const grass=[mat('#86c56a'),mat('#7cbc63'),mat('#73b25b'),mat('#6aa955')];
+  const rock=mat('#a8644a'),rock2=mat('#8e4f3b'),soil=mat('#6b3f30');
+  for(let i=0;i<4;i++){const top=slab(2.92,4.7,0.28,0.25,grass[i]);top.position.set(X(i),Gy(i)-0.28,0.45);scene.add(top);
+    const depth=Gy(i)-0.28-BOT;const body=slab(2.86,4.62,depth,0.22,i%2?rock2:rock);body.position.set(X(i),Gy(i)-0.28-depth,0.45);scene.add(body);
+    for(let k=1;k<4;k++){const sy=Gy(i)-0.28-k*1.15;if(sy<-5.6)break;const st=new THREE.Mesh(new THREE.BoxGeometry(2.9,0.06,0.04),soil);st.position.set(X(i),sy,2.84);scene.add(st);}
+    /* colored line strip on the front edge */
+    const strip=new THREE.Mesh(new THREE.BoxGeometry(2.7,0.07,0.07),mat(COL[i],{emissive:COL[i],emissiveIntensity:.6}));strip.position.set(X(i),Gy(i)-0.12,2.82);scene.add(strip);}
+  /* floating island underside chunks */
+  for(let k=0;k<7;k++){const c=new THREE.Mesh(new THREE.ConeGeometry(0.9+Math.random()*0.7,2+Math.random()*1.6,6),soil);c.rotation.x=Math.PI;c.position.set(-4.5+k*2.1+Math.random()*.4,BOT-1.2-Math.random()*.6,0.4+(Math.random()-.5)*2);c.castShadow=true;scene.add(c);}
+
+  /* treatment works platform + Clyde */
+  /* the works sits on its own grass terrace; the river runs below it, in front */
+  const PD=WTOP-0.28-BOT;const plat=slab(3.7,4.62,PD,.22,rock);plat.position.set(7.8,WTOP-0.28-PD,0.45);scene.add(plat);
+  const ptop=slab(3.76,4.7,0.28,.25,grass[3]);ptop.position.set(7.8,WTOP-0.28,0.45);scene.add(ptop);
+  const pad=slab(2.9,3.4,0.06,.15,mat('#d8d3c9',{roughness:.95}));pad.position.set(7.9,WTOP,0.15);scene.add(pad);
+  const chan=slab(16.6,1.7,0.9,.2,rock2);chan.position.set(1.7,RIV2-1.08,3.75);scene.add(chan);
+  const RW=16.4,RD=1.4,rg=new THREE.PlaneGeometry(RW,RD,110,8);rg.rotateX(-Math.PI/2);
+  const riverMat=mat('#3d93cf',{roughness:.25,metalness:.05,emissive:'#000000',transparent:true,opacity:.72});
+  const river=new THREE.Mesh(rg,riverMat);river.position.set(1.7,RIV2,3.75);
+  const lives=[0,1,2,3].map(i=>makeRiverLife(scene,mat,lin,X(i),RIV2,3.75,2.6,1.25,1.5,4)).concat([makeRiverLife(scene,mat,lin,7.8,RIV2,3.75,3.0,1.25,1.5,4)]);river.receiveShadow=true;scene.add(river);
+  const rbase=rg.attributes.position.array.slice();
+  const concW=mat('#e6e1d8',{roughness:.9}),effM=mat('#4f9fb8',{roughness:.2,emissive:'#123a48',emissiveIntensity:.5,flatShading:false});
+  const clar=[];[[7.05,-0.95,0.66],[8.55,-1.05,0.58]].forEach(([x,z,r])=>{const c=new THREE.Mesh(new THREE.CylinderGeometry(r,r,0.34,40),concW);c.position.set(x,WTOP+0.17,z);c.castShadow=c.receiveShadow=true;scene.add(c);
+    const w=new THREE.Mesh(new THREE.CircleGeometry(r-0.07,40),effM);w.rotation.x=-Math.PI/2;w.position.set(x,WTOP+0.3,z);scene.add(w);
+    const br=new THREE.Mesh(new THREE.BoxGeometry(r*2-0.1,0.06,0.1),mat('#2c3036'));br.position.set(x,WTOP+0.38,z);scene.add(br);clar.push(br);});
+  const inlet=new THREE.Mesh(new THREE.BoxGeometry(0.62,0.42,0.62),concW);inlet.position.set(7.2,WTOP+0.21,0.75);inlet.castShadow=true;scene.add(inlet);
+  const bldg=new THREE.Mesh(new THREE.BoxGeometry(0.95,0.6,0.7),mat('#f2efe9',{roughness:.8}));bldg.position.set(8.55,WTOP+0.3,0.45);bldg.castShadow=true;scene.add(bldg);
+  const broof=new THREE.Mesh(new THREE.BoxGeometry(1.0,0.08,0.75),mat(COL[3]));broof.position.set(8.55,WTOP+0.64,0.45);scene.add(broof);
+  /* Finnieston-style crane */
+  const craneM=mat('#1d1f24',{roughness:.6});const crane=new THREE.Group();crane.position.set(9.3,WTOP,-1.55);scene.add(crane);
+  const tower=new THREE.Mesh(new THREE.BoxGeometry(0.3,3.2,0.3),craneM);tower.position.y=1.6;tower.castShadow=true;crane.add(tower);
+  const jib=new THREE.Mesh(new THREE.BoxGeometry(3.0,0.24,0.28),craneM);jib.position.set(-0.6,3.25,0);jib.castShadow=true;crane.add(jib);
+  const cab=new THREE.Mesh(new THREE.BoxGeometry(0.55,0.38,0.45),craneM);cab.position.set(0.7,2.85,0);crane.add(cab);
+  /* paddle steamer */
+  const boat=new THREE.Group();scene.add(boat);
+  const hull=new THREE.Mesh(new THREE.BoxGeometry(1.0,0.18,0.36),mat('#16181c'));hull.position.y=0.1;boat.add(hull);
+  const deck=new THREE.Mesh(new THREE.BoxGeometry(0.66,0.13,0.3),mat('#f4efe6'));deck.position.y=0.27;boat.add(deck);
+  [-0.15,0.15].forEach(x=>{const f=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.28,10),mat('#d8342b'));f.position.set(x,0.44,0);boat.add(f);const tp=new THREE.Mesh(new THREE.CylinderGeometry(0.052,0.052,0.07,10),mat('#16181c'));tp.position.set(x,0.6,0);boat.add(tp);});
+  boat.traverse(o=>{if(o.isMesh)o.castShadow=true;});
+
+  /* tanks */
+  const tanks=[];const concrete=mat('#d9d4cc',{roughness:.9}),metal=mat('#b9c0c6',{roughness:.35,metalness:.6,flatShading:false});
+  const SEW='#8f8a66',FOAM='#d6cfa4';
+  for(let i=0;i<4;i++){const g=new THREE.Group();g.position.set(CX(i),Gy(i),ZT);scene.add(g);const r=RAD[i];
+    const base=new THREE.Mesh(new THREE.CylinderGeometry(r+0.16,r+0.22,0.16,40),concrete);base.position.y=0.08;base.castShadow=true;base.receiveShadow=true;g.add(base);
+    const wg=new THREE.CylinderGeometry(r-0.03,r-0.03,1,40,1);wg.translate(0,0.5,0);
+    const water=new THREE.Mesh(wg,mat(SEW,{roughness:.4,flatShading:false}));water.position.y=0.16;water.castShadow=true;g.add(water);
+    const sg=new THREE.CircleGeometry(r-0.04,40,0,Math.PI*2);const surf=new THREE.Mesh(sg,mat(FOAM,{roughness:.3,emissive:'#3a3520',emissiveIntensity:.4}));surf.rotation.x=-Math.PI/2;g.add(surf);
+    const glass=new THREE.Mesh(new THREE.CylinderGeometry(r,r,H,48,1,true),new THREE.MeshPhysicalMaterial({color:0xffffff,roughness:.05,transparent:true,opacity:.2,side:THREE.DoubleSide,depthWrite:false,clearcoat:1}));glass.position.y=0.16+H/2;g.add(glass);
+    const ringM=mat(COL[i],{emissive:COL[i],emissiveIntensity:.35,flatShading:false,roughness:.4});
+    const rim=new THREE.Mesh(new THREE.TorusGeometry(r,0.075,14,64),ringM);rim.rotation.x=Math.PI/2;rim.position.y=0.16+H;rim.castShadow=true;g.add(rim);
+    const band=new THREE.Mesh(new THREE.TorusGeometry(r+0.005,0.04,10,64),ringM);band.rotation.x=Math.PI/2;band.position.y=0.16+H*0.5;g.add(band);
+    /* legs/ribs */
+    for(let k=0;k<6;k++){const a=k/6*Math.PI*2;const rib=new THREE.Mesh(new THREE.BoxGeometry(0.06,H,0.06),metal);rib.position.set(Math.cos(a)*r,0.16+H/2,Math.sin(a)*r);g.add(rib);}
+    const puddle=new THREE.Mesh(new THREE.CircleGeometry(1,24),mat(SEW,{roughness:.2,transparent:true,opacity:.9}));puddle.rotation.x=-Math.PI/2;puddle.position.set(CX(i)-0.9,Gy(i)+0.01,0.2);puddle.scale.setScalar(0.001);scene.add(puddle);
+    tanks.push({g,r,water,surf,rim,ringM,puddle,pk:0,wob:0,lastS:0});}
+
+  /* tenements + trees */
+  const sand=[mat('#c9694c'),mat('#d9a873'),mat('#b85a43'),mat('#e0bb8a')];const winM=mat('#ffd98a',{emissive:'#ffcc66',emissiveIntensity:.9,flatShading:false});
+  const roofG=new THREE.CylinderGeometry(0.0001,0.36,0.3,4,1);roofG.rotateY(Math.PI/4);
+  const winG=new THREE.PlaneGeometry(0.07,0.09);
+  const hoods=[];const winMeshes=[];
+  for(let i=0;i<4;i++){let s=i*17+3;const rnd=()=>{s=(s*9301+49297)%233280;return s/233280;};
+    const roofM=mat(COL[i],{roughness:.6});const grp=new THREE.Group();scene.add(grp);
+    const spots=[[-1.2,-1.85],[-0.68,-1.95],[-1.2,-1.15],[-0.7,-1.25],[-1.2,-0.45],[-0.72,-0.55],[-1.2,0.3]];
+    spots.forEach(([dx,dz],k)=>{const w=0.42,d=0.42,h=0.55+rnd()*0.55;const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),sand[(k+i)%4]);b.position.set(X(i)+dx,Gy(i)+h/2,dz);b.castShadow=b.receiveShadow=true;grp.add(b);
+      const roof=new THREE.Mesh(roofG,roofM);roof.scale.set(0.83,1,0.83);roof.position.set(X(i)+dx,Gy(i)+h+0.15,dz);roof.castShadow=true;grp.add(roof);
+      const ch=new THREE.Mesh(new THREE.BoxGeometry(0.07,0.16,0.07),sand[2]);ch.position.set(X(i)+dx+0.1,Gy(i)+h+0.2,dz-0.05);grp.add(ch);
+      for(let fy=0.18;fy<h-0.1;fy+=0.2)for(const fx of [-0.11,0.0,0.11]){const wn=new THREE.Mesh(winG,winM);wn.position.set(X(i)+dx+fx,Gy(i)+fy,dz+d/2+0.002);grp.add(wn);}});
+    for(let k=0;k<3;k++){const tx=X(i)+(k===0?1.2:k===1?-0.2:1.25),tz=k===0?-1.5:k===1?2.2:2.25;const tr=new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.05,0.25,6),mat('#6b4a33'));tr.position.set(tx,Gy(i)+0.12,tz);grp.add(tr);
+      const crown=new THREE.Mesh(new THREE.IcosahedronGeometry(0.24+rnd()*0.1,0),mat(k%2?'#4f9a4a':'#3f8a45'));crown.position.set(tx,Gy(i)+0.42,tz);crown.castShadow=true;grp.add(crown);}
+    hoods.push({grp});}
+
+  /* pipes + valves */
+  const pipes=[];const pipeM=mat('#c7ccd1',{roughness:.3,metalness:.55,flatShading:false});const jointG=new THREE.SphereGeometry(0.11,16,12);
+  function tube(pts,m,rad){const path=new THREE.CurvePath();for(let k=1;k<pts.length;k++)path.add(new THREE.LineCurve3(pts[k-1],pts[k]));
+    const me=new THREE.Mesh(new THREE.TubeGeometry(path,120,rad||0.09,14,false),m);me.castShadow=true;scene.add(me);
+    for(let k=1;k<pts.length-1;k++){const j=new THREE.Mesh(jointG,m);j.position.copy(pts[k]);scene.add(j);}return path;}
+  const partM=new THREE.MeshBasicMaterial({color:lin('#e9e4c4')});const partG=new THREE.SphereGeometry(0.06,8,8);
+  for(let i=0;i<4;i++){const y=Gy(i)+0.3,x0=CX(i)+RAD[i];let pts;
+    if(i<3)pts=[new THREE.Vector3(x0,y,ZT),new THREE.Vector3(CX(i+1),y,ZT),new THREE.Vector3(CX(i+1),Gy(i+1)+0.16+H+0.25,ZT)];
+    else pts=[new THREE.Vector3(x0,y,ZT),new THREE.Vector3(7.2,y,ZT),new THREE.Vector3(7.2,WTOP+0.42,ZT)];
+    const path=tube(pts,pipeM);
+    const vx=x0+0.55,vg=new THREE.Group();vg.position.set(vx,y,ZT);scene.add(vg);
+    const body=new THREE.Mesh(new THREE.SphereGeometry(0.2,20,14),mat('#3b4048',{roughness:.4,metalness:.4,flatShading:false}));body.scale.set(1.25,1,1);body.castShadow=true;vg.add(body);
+    const stem=new THREE.Mesh(new THREE.CylinderGeometry(0.035,0.035,0.34,10),pipeM);stem.position.y=0.3;vg.add(stem);
+    const wheel=new THREE.Group();wheel.position.y=0.5;vg.add(wheel);
+    const wm=mat(COL[i],{emissive:COL[i],emissiveIntensity:.35,flatShading:false,roughness:.35});
+    const tor=new THREE.Mesh(new THREE.TorusGeometry(0.3,0.055,12,40),wm);tor.rotation.x=Math.PI/2;tor.castShadow=true;wheel.add(tor);
+    for(let k=0;k<4;k++){const sp=new THREE.Mesh(new THREE.BoxGeometry(0.58,0.045,0.06),wm);sp.rotation.y=k*Math.PI/4;wheel.add(sp);}
+    const knob=new THREE.Mesh(new THREE.SphereGeometry(0.08,12,10),wm);knob.position.set(0.3,0.06,0);wheel.add(knob);
+    const lampM=new THREE.MeshBasicMaterial({color:lin('#333333')});const lamp=new THREE.Mesh(new THREE.SphereGeometry(0.075,14,10),lampM);lamp.position.y=0.08;wheel.add(lamp);
+    const N=30,inst=new THREE.InstancedMesh(partG,partM,N);inst.frustumCulled=false;scene.add(inst);
+    pipes.push({path,wheel,ang:0,vel:0,lampM,inst,N,phase:Math.random(),vg,pop:0,last:-1,valvePos:new THREE.Vector3(vx,y+1.05,ZT)});}
+
+  const effPath=tube([new THREE.Vector3(8.55,WTOP+0.2,-0.4),new THREE.Vector3(8.55,WTOP+0.2,3.2),new THREE.Vector3(8.55,RIV2+0.02,3.2)],effM,0.07);
+  /* upstream sewer into tank 1 */
+  const burnM=pipeM;
+  const bp=[new THREE.Vector3(-7.6,Gy(0)+H+0.7,ZT),new THREE.Vector3(CX(0),Gy(0)+H+0.7,ZT),new THREE.Vector3(CX(0),Gy(0)+H+0.4,ZT)];
+  const burnPath=tube(bp,burnM,0.1);const burnInst=new THREE.InstancedMesh(partG,partM,24);burnInst.frustumCulled=false;scene.add(burnInst);let burnPhase=0;
+
+  /* clouds */
+  const clouds=[];const cloudM=mat('#e8ecf3',{roughness:1});
+  for(let k=0;k<7;k++){const c=new THREE.Group();const n=3+(k%3);for(let j=0;j<n;j++){const p=new THREE.Mesh(new THREE.IcosahedronGeometry(0.7+Math.random()*0.6,1),cloudM);p.position.set(j*0.8-n*0.4,Math.random()*0.4,(Math.random()-.5)*0.8);p.castShadow=true;c.add(p);}
+    c.position.set(-9+k*3.4,Gy(0)+4.2+Math.random()*1.0,-2+Math.random()*3);c.userData.v=0.15+Math.random()*0.2;scene.add(c);clouds.push(c);}
+
+  /* rain */
+  const NR=1100;const rgeo=new THREE.BufferGeometry();const rpos=new Float32Array(NR*6);rgeo.setAttribute('position',new THREE.BufferAttribute(rpos,3));
+  const rainMat=new THREE.LineBasicMaterial({color:lin('#cfe3ff'),transparent:true,opacity:.75});const rain=new THREE.LineSegments(rgeo,rainMat);rain.frustumCulled=false;scene.add(rain);
+  const drops=[];
+  /* splash + geyser particles */
+  const NS=260,spG=new THREE.SphereGeometry(0.045,6,6);
+  const spInst=new THREE.InstancedMesh(spG,new THREE.MeshBasicMaterial({color:lin('#dbe9ff')}),NS);spInst.frustumCulled=false;scene.add(spInst);
+  const gyInst=new THREE.InstancedMesh(new THREE.SphereGeometry(0.07,6,6),mat(SEW,{flatShading:false}),NS);gyInst.frustumCulled=false;scene.add(gyInst);
+  const splashes=[],gey=[];
+
+  /* labels */
+  const L3={name:[],pct:[],rain:[],valve:[]};
+  for(let i=0;i<4;i++){L3.name.push(mkLab('nm c'+(i+1),NAMES[i]));L3.pct.push(mkLab('pct',''));L3.rain.push(mkLab('rn',''));L3.valve.push(mkLab('vl',''));}
+  const burnLab=mkLab('rn burn','');const worksName=mkLab('nm cw','Works');const ovLabs=[0,1,2,3,4].map(()=>mkLab('ovl',''));const rivLab=mkLab('riv','');const effInst=new THREE.InstancedMesh(partG,new THREE.MeshBasicMaterial({color:lin('#bfe9f5')}),12);effInst.frustumCulled=false;scene.add(effInst);let effPhase=0;
+  const tmp=new THREE.Vector3();
+  function proj(v){tmp.copy(v).project(cam);return [(tmp.x*.5+.5)*stage.clientWidth,(-tmp.y*.5+.5)*stage.clientHeight];}
+  function place(el,v,dx,dy){const p=proj(v);el.style.transform='translate('+(p[0]+(dx||0)).toFixed(1)+'px,'+(p[1]+(dy||0)).toFixed(1)+'px) translate(-50%,-50%)';}
+  function popup(v,html,cls){const p=proj(v);const d=document.createElement('div');d.className='popf '+(cls||'');d.innerHTML=html;d.style.left=p[0]+'px';d.style.top=p[1]+'px';ov.appendChild(d);setTimeout(()=>d.remove(),1500);}
+
+  function resize3(){const w=stage.clientWidth,h=stage.clientHeight||Math.round(w*300/640);renderer.setSize(w,h,false);renderer.domElement.style.width=w+'px';renderer.domElement.style.height=h+'px';stage.style.setProperty('--u',Math.max(0.7,Math.min(1.1,h/360)).toFixed(3));cam.aspect=w/h;CAM0.z=w/h<1.8?31:26.5;cam.position.z=CAM0.z;cam.updateProjectionMatrix();}
+  resize3();window.addEventListener('resize',resize3);
+  let px=0,py=0;stage.addEventListener('pointermove',e=>{const r=stage.getBoundingClientRect();px=(e.clientX-r.left)/r.width-.5;py=(e.clientY-r.top)/r.height-.5;});
+  stage.addEventListener('pointerleave',()=>{px=0;py=0;});
+  const M4=new THREE.Matrix4(),Q=new THREE.Quaternion(),S1=new THREE.Vector3(1,1,1),S0=new THREE.Vector3(0,0,0),P3=new THREE.Vector3(),SV=new THREE.Vector3();
+  let flash=0,lastFlashH=-1,shake=0,prevH=-1,sky=0;
+  const cssDark=lin('#000');
+
+  G3={update(now,dt){
+    const done=playhead>=T,ph=Math.min(playhead,T-0.0001),st=stateAt(ph),h=st.h,tt=now/1000;
+    const rainNow=done?0:RAIN.reduce((a,r)=>a+r[h],0);
+    sky+=((Math.min(1,rainNow/70))-sky)*Math.min(1,dt*1.5);stage.style.setProperty('--storm',sky.toFixed(3));
+    /* hour events: fines popups, shake */
+    if(!done&&h!==prevH){prevH=h;
+      for(let i=0;i<4;i++){const fl=res.log[h].fl[i];if(fl>0.01){popup(new THREE.Vector3(CX(i)-0.4,Gy(i)+2.5,ZT),'Tank overflow '+Math.max(1,Math.round(fl))+' ML','bad');}}
+      const by=res.log[h].by;if(by>0.01){popup(new THREE.Vector3(7.4,WTOP+1.6,0.8),'Works overflow '+Math.max(1,Math.round(by))+' ML','bad');}}
+    if(done)prevH=-1;
+    /* camera */
+    shake=Math.max(0,shake-dt*1.2);
+    if(!reduce){cam.position.set(CAM0.x+Math.sin(tt*0.13)*0.7+px*1.8+(Math.random()-.5)*shake*0.5,CAM0.y+Math.sin(tt*0.21)*0.25-py*1.2+(Math.random()-.5)*shake*0.5,CAM0.z);cam.lookAt(LOOK);}
+    /* lightning */
+    if(!reduce&&!done&&rainNow>60&&lastFlashH!==h&&Math.random()<0.025){flash=1;lastFlashH=h;}
+    hemi.intensity=0.95-sky*0.35+flash*1.8;sun.intensity=1.35-sky*0.75+flash*1.2;stage.style.setProperty('--flash',flash.toFixed(2));flash=Math.max(0,flash-dt*3.2);
+    /* clouds */
+    clouds.forEach((c,k)=>{c.position.x+=dt*c.userData.v*(1+sky*2);if(c.position.x>14)c.position.x=-12;c.position.y+=Math.sin(tt*0.5+k)*0.002;});
+    cloudM.color.copy(lin('#e8ecf3')).lerp(lin('#59606e'),sky);
+    /* tanks */
+    for(let i=0;i<4;i++){const t=tanks[i],f=Math.max(0.0001,Math.min(1,st.S[i]/CFG.cap[i]));
+      const dS=f-t.lastS;t.lastS=f;t.wob+=dS*30;t.wob*=Math.pow(0.02,dt);
+      const hh=H*f;t.water.scale.y=hh;t.water.visible=f>0.003;
+      t.surf.position.y=0.16+hh+0.003;t.surf.visible=f>0.003;t.surf.rotation.z=Math.sin(tt*2+i)*0.02;
+      t.g.scale.set(1+t.wob*0.03,1-t.wob*0.02,1+t.wob*0.03);
+      const spill=!done&&st.fl[i]>0.01;const pulse=.5+.5*Math.sin(now*0.014);
+      t.ringM.emissive.copy(lin(spill?'#ff3b2e':COL[i]));t.ringM.emissiveIntensity=spill?0.7+1.1*pulse:0.35;
+      t.puddle.visible=false;
+      if(spill&&!reduce){for(let k=0;k<4;k++)if(gey.length<NS&&Math.random()<dt*40){gey.push({p:new THREE.Vector3(CX(i)+(Math.random()-.5)*0.7,Gy(i)+0.16+H,ZT+t.r*0.9),v:new THREE.Vector3((Math.random()-.5)*0.3,0.6+Math.random()*0.5,1.5+Math.random()*0.8),life:1.7});}}
+      /* labels */
+      tmp.set(X(i)-0.55,Gy(i),2.7);place(L3.name[i],tmp,0,8);
+      if(L3.name[i]._s!==spill){L3.name[i]._s=spill;L3.name[i].innerHTML=spill?NAMES[i]+'<span class="ovf">overflowing</span>':NAMES[i];L3.name[i].classList.toggle('bad',spill);}
+      L3.pct[i].style.display=L3.rain[i].style.display=L3.valve[i].style.display=showNums?'':'none';
+      if(showNums){tmp.set(CX(i),Gy(i)+0.16+H*0.45,ZT+t.r+0.05);place(L3.pct[i],tmp);}L3.pct[i].textContent=Math.round(f*100)+'%';
+      const r=done?0:RAIN[i][h];if(showNums){tmp.set(CX(i)-t.r-0.1,Gy(i)+H+0.55,ZT);place(L3.rain[i],tmp);}if(L3.rain[i]._r!==r){L3.rain[i]._r=r;L3.rain[i].innerHTML=r?'<span class="drop"></span>+'+r+' ML':'';L3.rain[i].style.opacity=r?1:0;}}
+    /* pipes & valves */
+    for(let i=0;i<4;i++){const p=pipes[i],vv=done?0:V[i][h],open=vv/(L-1),q=done?0:st.rel[i];
+      if(p.last!==vv){if(p.last!==-1)p.pop=1;p.last=vv;}
+      const target=open*Math.PI*2;const acc=(target-p.ang)*90-p.vel*12;p.vel+=acc*dt;p.ang+=p.vel*dt;p.wheel.rotation.y=p.ang;
+      p.pop=Math.max(0,p.pop-dt*3);const sc=1+Math.sin(p.pop*Math.PI)*0.35;p.vg.scale.setScalar(sc);
+      p.lampM.color.copy(lin(open>0?COL[i]:'#333333'));
+      p.phase+=dt*(0.22+q*0.022);const n=q>0.3?Math.min(p.N,Math.max(3,Math.round(q/1.4))):0;
+      for(let k=0;k<p.N;k++){if(k<n){p.path.getPointAt((p.phase+k/n)%1,P3);M4.compose(P3,Q,S1);}else M4.compose(P3.set(0,-99,0),Q,S0);p.inst.setMatrixAt(k,M4);}
+      p.inst.instanceMatrix.needsUpdate=true;
+      if(showNums)place(L3.valve[i],p.valvePos,0,0);if(L3.valve[i]._v!==vv){L3.valve[i]._v=vv;L3.valve[i].innerHTML='<span class="mm"><i style="height:'+(vv*25)+'%;background:'+COL[i]+'"></i></span><b>'+(vv===0?'Closed':vv===4?'Open':(vv*25)+'%')+'</b>';L3.valve[i].title=vv===0?'Closed':vv===4?'Open':(vv*25)+'% open';}}
+    const inf=done?0:INFLOW[h];burnPhase+=dt*(0.25+inf*0.025);const bn=inf?Math.max(3,Math.round(inf*1.4)):0;
+    for(let k=0;k<24;k++){if(k<bn){burnPath.getPointAt((burnPhase+k/bn)%1,P3);M4.compose(P3,Q,S1);}else M4.compose(P3.set(0,-99,0),Q,S0);burnInst.setMatrixAt(k,M4);}burnInst.instanceMatrix.needsUpdate=true;
+    burnLab.style.display=showNums?'':'none';if(showNums){tmp.set(-6.2,Gy(0)+H+0.7,ZT);place(burnLab,tmp,0,-20);burnLab.innerHTML='Upstream +'+inf+' ML/h';}
+    /* rain */
+    if(!reduce){for(let i=0;i<4;i++){const r=done?0:RAIN[i][h];let nn=r*2.6*dt;while(nn>0){if(Math.random()<nn&&drops.length<NR){const x=X(i)-1.4+Math.random()*2.8,z=-1.9+Math.random()*4.6;const dx=x-CX(i),dz=z-ZT;drops.push({x,y:Gy(i)+5.5+Math.random()*2.5,z,v:11+Math.random()*4,i,inTank:dx*dx+dz*dz<RAD[i]*RAD[i]});}nn-=1;}}}
+    let k=0;for(let d=drops.length-1;d>=0;d--){const o=drops[d];o.y-=o.v*dt;const floor=o.inTank?Gy(o.i)+0.16+H*Math.min(1,st.S[o.i]/CFG.cap[o.i]):Gy(o.i);
+      if(o.y<floor){if(splashes.length<NS&&Math.random()<.35)splashes.push({p:new THREE.Vector3(o.x,floor+0.02,o.z),v:new THREE.Vector3((Math.random()-.5)*1.2,1+Math.random(),(Math.random()-.5)*1.2),life:.45});drops.splice(d,1);}}
+    for(const o of drops){rpos[k++]=o.x;rpos[k++]=o.y;rpos[k++]=o.z;rpos[k++]=o.x-0.03;rpos[k++]=o.y+0.38;rpos[k++]=o.z;}
+    rgeo.attributes.position.needsUpdate=true;rgeo.setDrawRange(0,drops.length*2);
+    const stepP=(arr,inst,g)=>{for(let j=arr.length-1;j>=0;j--){const s=arr[j];s.life-=dt;s.v.y-=g*dt;s.p.addScaledVector(s.v,dt);if(s.life<=0)arr.splice(j,1);}
+      for(let j=0;j<NS;j++){if(j<arr.length){const s=arr[j];SV.setScalar(Math.max(0.2,Math.min(1,s.life*2)));M4.compose(s.p,Q,SV);}else M4.compose(P3.set(0,-99,0),Q,S0);inst.setMatrixAt(j,M4);}inst.instanceMatrix.needsUpdate=true;};
+    stepP(splashes,spInst,6);stepP(gey,gyInst,7);
+    /* per-outfall overflow, accumulating as the storm plays */
+    const runOut=[0,0,0,0,0],phR=Math.min(playhead,T);for(let t=0;t<T;t++){const w=t<Math.floor(phR)?1:t===Math.floor(phR)?phR-t:0;if(!w)break;for(let q=0;q<4;q++)runOut[q]+=res.log[t].fl[q]*w;runOut[4]+=res.log[t].by*w;}
+    for(let k=0;k<5;k++){const x=k<4?X(k)-0.55:7.4,y=k<4?Gy(k):WTOP;tmp.set(x,y,2.7);place(ovLabs[k],tmp,0,32);
+      const v=runOut[k],key=v.toFixed(1);if(ovLabs[k]._k!==key){ovLabs[k]._k=key;ovLabs[k].textContent=v>0.05?key+' ML overflow':'No overflow';ovLabs[k].classList.toggle('has',v>0.05);ovLabs[k].classList.toggle('zero',v<=0.05);}}
+    tmp.set(7.4,WTOP,2.7);place(worksName,tmp,0,8);
+    /* works + river */
+    const rq=done?0:st.rel[3],bad=rq>CFG.works+0.01;const pulse=.5+.5*Math.sin(now*0.014);const byNow=done?0:Math.max(0,rq-CFG.works);
+    const ra=rg.attributes.position.array;for(let j=0;j<ra.length;j+=3){const x=rbase[j],z=rbase[j+2];ra[j+1]=Math.sin(x*2.0-tt*1.4)*0.05+Math.sin(z*3+tt*1.1)*0.03;}
+    rg.attributes.position.needsUpdate=true;rg.computeVertexNormals();
+    const anySp=bad||(!done&&st.fl.some(x=>x>0.01));riverMat.color.copy(lin(anySp?'#7d8a6a':'#3d93cf'));riverMat.emissive.copy(lin(bad?'#3a2a10':'#000000'));riverMat.emissiveIntensity=bad?pulse*0.6:0;
+    clar.forEach((c,k)=>{c.rotation.y+=dt*(0.25+k*0.08);});
+    if(bad&&!reduce){for(let k=0;k<4;k++)if(gey.length<NS&&Math.random()<dt*40)gey.push({p:new THREE.Vector3(7.2+(Math.random()-.5)*0.4,WTOP+0.1,2.75),v:new THREE.Vector3((Math.random()-.5)*0.3,0.4,1.1+Math.random()*0.5),life:1.1});}
+    const tq=Math.min(rq,CFG.works);effPhase+=dt*(0.3+tq*0.02);const en=tq>0.3?Math.max(3,Math.round(tq/1.8)):0;
+    for(let k=0;k<12;k++){if(k<en){effPath.getPointAt((effPhase+k/en)%1,P3);M4.compose(P3,Q,S1);}else M4.compose(P3.set(0,-99,0),Q,S0);effInst.setMatrixAt(k,M4);}effInst.instanceMatrix.needsUpdate=true;
+    boat.visible=false;let killX=null;lives.forEach((lf,k)=>{const pol=k<4?(!done&&st.fl[k]>0.01):bad;if(lf.update(dt,tt,pol)&&killX===null)killX=k<4?X(k):7.8;});
+    tmp.set(7.9,WTOP,-1.6);place(rivLab,tmp,0,-70);
+    const rv=Math.round(rq);if(rivLab._k!==rv+'|'+bad){rivLab._k=rv+'|'+bad;rivLab.innerHTML=bad?'Works overflowing '+Math.max(1,Math.round(byNow))+' ML/h':'Treatment works <b>'+rv+' of 20 ML/h</b>';rivLab.classList.toggle('over',bad);}
+    renderer.render(scene,cam);}};
+}
+
+function valveIcon(i,v,big){const o=v/(L-1),C=COL[i],sz=big?30:22,circ=2*Math.PI*9;
+  return '<svg class="vi" viewBox="0 0 24 24" width="'+sz+'" height="'+sz+'" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="'+(big?'#000':'none')+'" stroke="#3a3a3a" stroke-width="3"/>'+
+  '<circle cx="12" cy="12" r="9" fill="none" stroke="'+C+'" stroke-width="3" stroke-dasharray="'+(o*circ).toFixed(2)+' '+circ.toFixed(2)+'" transform="rotate(-90 12 12)" stroke-linecap="'+(o>0&&o<1?'round':'butt')+'"/>'+
+  '<rect x="10.8" y="5.5" width="2.4" height="13" rx="1.2" fill="#fff" transform="rotate('+(o*90)+' 12 12)"/></svg>'+(big?'<span>'+(v===0?'Closed':v===4?'Open':(v*25)+'%')+'</span>':'');}
+
+let has3D=true;
+try{init3D();}catch(e){has3D=false;stage.classList.add('no3d');$('pens').classList.add('show');mkLab('fallback','The 3D view needs WebGL, which this browser has turned off. Everything else on the page still works.');}
+
+function frame(now){const dt=Math.min(0.05,(now-lastT)/1000||0);lastT=now;
+  if(playing){playhead+=dt/HOUR;if(playhead>T+HOLD/HOUR)playhead=0;$('hour').value=Math.min(T,playhead);}
+  const done=playhead>=T,h=Math.min(T-1,Math.floor(playhead));
+  $('hourLbl').textContent=done?'End':'Hour '+(h+1);markNow(done?-1:h);
+  const head=document.getElementById('rcHead');if(head){const x=4+Math.min(T,playhead)*26.5;head.setAttribute('x1',x);head.setAttribute('x2',x);}
+  const fn=fineAt(Math.min(playhead,T));const fe=document.getElementById('fineNow');fe.textContent=Math.round(fn).toLocaleString();fe.classList.toggle('bad',fn>0);$('runTot').textContent=(fn/CFG.fine).toFixed(1);$('runFine').textContent=Math.round(fn).toLocaleString();
+  document.getElementById('clockArc').setAttribute('stroke-dasharray',(Math.min(1,playhead/T)*106.8).toFixed(1)+' 107');document.getElementById('clockTxt').textContent=done?'✓':String(h+1);
+  tickScore();
+  if(has3D)G3.update(now,dt);}
+function loop(now){frame(now);requestAnimationFrame(loop);}
+function renderOnce(){frame(performance.now());}
+
+/* ---------------- tutorial 3D scene (same style as the main game) ---------------- */
+let T3=null;
+function initTut3D(){
+  if(typeof THREE==='undefined')throw new Error('three missing');
+  const stageT=$('tstage'),ovT=$('tov');
+  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));renderer.setClearColor(0x000000,0);
+  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
+  stageT.insertBefore(renderer.domElement,ovT);
+  const scene=new THREE.Scene();scene.fog=new THREE.Fog('#3a4a6b',20,38);
+  const cam=new THREE.PerspectiveCamera(30,640/380,0.1,80);const CAM0=new THREE.Vector3(0.8,5.4,14.6),LOOK=new THREE.Vector3(0.35,-0.55,0.7);
+  const lin=c=>new THREE.Color(c).convertSRGBToLinear();
+  const mat=(c,o)=>{const m=new THREE.MeshStandardMaterial(Object.assign({roughness:.75,metalness:0,flatShading:true},o||{}));m.color=lin(c);if(o&&o.emissive)m.emissive=lin(o.emissive);return m;};
+  const hemi=new THREE.HemisphereLight(lin('#cfe0ff'),lin('#5b4636'),0.95);scene.add(hemi);
+  const sun=new THREE.DirectionalLight(lin('#fff0d8'),1.35);sun.position.set(-5,11,8);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);
+  Object.assign(sun.shadow.camera,{left:-8,right:8,top:8,bottom:-8,near:1,far:30});sun.shadow.bias=-0.0006;sun.shadow.radius=3;scene.add(sun);
+  const fill=new THREE.DirectionalLight(lin('#7fb2ff'),0.45);fill.position.set(8,3,-5);scene.add(fill);
+  function slab(w,d,h,r,m){const s=new THREE.Shape();const x=-w/2,y=-d/2;
+    s.moveTo(x+r,y);s.lineTo(x+w-r,y);s.quadraticCurveTo(x+w,y,x+w,y+r);s.lineTo(x+w,y+d-r);s.quadraticCurveTo(x+w,y+d,x+w-r,y+d);s.lineTo(x+r,y+d);s.quadraticCurveTo(x,y+d,x,y+d-r);s.lineTo(x,y+r);s.quadraticCurveTo(x,y,x+r,y);
+    const g=new THREE.ExtrudeGeometry(s,{depth:h,bevelEnabled:true,bevelThickness:.06,bevelSize:.06,bevelSegments:2,curveSegments:6});g.rotateX(-Math.PI/2);const me=new THREE.Mesh(g,m);me.castShadow=me.receiveShadow=true;return me;}
+  const TC='#5FB0E6',GA=0.8,GB=-1.0,XA=-1.7,XB=1.9,ZT=0.85,H=1.55,R=0.98,RIV=-1.9;
+  const grassM=mat('#7cbc63'),grass2=mat('#6aa955'),rock=mat('#a8644a'),rock2=mat('#8e4f3b'),soil=mat('#6b3f30');
+  /* terraces */
+  [[XA,GA,grassM,rock],[XB,GB,grass2,rock2]].forEach(([x,g,gm,rm])=>{const top=slab(3.6,4.7,0.28,.25,gm);top.position.set(x,g-0.28,0.45);scene.add(top);
+    const d=g+4.2;const body=slab(3.54,4.62,d,.22,rm);body.position.set(x,g-0.28-d,0.45);scene.add(body);
+    for(let k=0;k<4;k++){const c=new THREE.Mesh(new THREE.ConeGeometry(0.8+Math.random()*0.5,1.6+Math.random(),6),soil);c.rotation.x=Math.PI;c.position.set(x-1.2+k*0.8,-5.2-Math.random()*.4,0.4+(Math.random()-.5)*1.5);scene.add(c);}});
+  const strip=new THREE.Mesh(new THREE.BoxGeometry(3.3,0.07,0.07),mat(TC,{emissive:TC,emissiveIntensity:.6}));strip.position.set(XA,GA-0.12,2.82);scene.add(strip);
+  /* river below the works, in front */
+  const chan=slab(7.8,1.7,0.9,.2,rock2);chan.position.set(0.1,RIV-1.08,3.75);scene.add(chan);
+  const rg=new THREE.PlaneGeometry(7.6,1.4,50,8);rg.rotateX(-Math.PI/2);const riverMat=mat('#3d93cf',{roughness:.25,emissive:'#000000',transparent:true,opacity:.72});
+  const river=new THREE.Mesh(rg,riverMat);river.position.set(0.1,RIV,3.75);scene.add(river);
+  const lifeA=makeRiverLife(scene,mat,lin,XA,RIV,3.75,3.2,1.25,1.6,5),lifeB=makeRiverLife(scene,mat,lin,XB,RIV,3.75,3.2,1.25,1.6,5);const rbase=rg.attributes.position.array.slice();
+  /* tank */
+  const g=new THREE.Group();g.position.set(XA+0.45,GA,ZT);scene.add(g);
+  const concrete=mat('#d9d4cc',{roughness:.9}),metal=mat('#b9c0c6',{roughness:.35,metalness:.6,flatShading:false});
+  const base=new THREE.Mesh(new THREE.CylinderGeometry(R+0.16,R+0.22,0.16,40),concrete);base.position.y=0.08;base.receiveShadow=base.castShadow=true;g.add(base);
+  const wg=new THREE.CylinderGeometry(R-0.03,R-0.03,1,40);wg.translate(0,0.5,0);const water=new THREE.Mesh(wg,mat('#8f8a66',{roughness:.4,flatShading:false}));water.position.y=0.16;water.castShadow=true;g.add(water);
+  const surf=new THREE.Mesh(new THREE.CircleGeometry(R-0.04,40),mat('#d6cfa4',{roughness:.3,emissive:'#3a3520',emissiveIntensity:.4}));surf.rotation.x=-Math.PI/2;g.add(surf);
+  const glass=new THREE.Mesh(new THREE.CylinderGeometry(R,R,H,48,1,true),new THREE.MeshPhysicalMaterial({color:0xffffff,roughness:.05,transparent:true,opacity:.2,side:THREE.DoubleSide,depthWrite:false,clearcoat:1}));glass.position.y=0.16+H/2;g.add(glass);
+  const ringM=mat(TC,{emissive:TC,emissiveIntensity:.35,flatShading:false,roughness:.4});
+  const rim=new THREE.Mesh(new THREE.TorusGeometry(R,0.075,14,64),ringM);rim.rotation.x=Math.PI/2;rim.position.y=0.16+H;g.add(rim);
+  for(let k=0;k<6;k++){const a=k/6*Math.PI*2;const rb=new THREE.Mesh(new THREE.BoxGeometry(0.06,H,0.06),metal);rb.position.set(Math.cos(a)*R,0.16+H/2,Math.sin(a)*R);g.add(rb);}
+  /* a few homes behind the tank */
+  const sand=[mat('#c9694c'),mat('#d9a873'),mat('#b85a43'),mat('#e0bb8a')],roofM=mat(TC),winM=mat('#ffd98a',{emissive:'#ffcc66',emissiveIntensity:.9,flatShading:false});
+  const roofG=new THREE.CylinderGeometry(0.0001,0.36,0.3,4,1);roofG.rotateY(Math.PI/4);
+  [[-1.25,-1.6],[-0.7,-1.8],[-0.15,-1.75],[-1.25,-0.9],[0.45,-1.85]].forEach(([dx,dz],k)=>{const h=0.6+((k*37)%5)/10;const b=new THREE.Mesh(new THREE.BoxGeometry(0.42,h,0.42),sand[k%4]);b.position.set(XA+dx,GA+h/2,dz);b.castShadow=b.receiveShadow=true;scene.add(b);
+    const rf=new THREE.Mesh(roofG,roofM);rf.scale.set(.83,1,.83);rf.position.set(XA+dx,GA+h+0.15,dz);scene.add(rf);
+    for(let fy=0.18;fy<h-0.1;fy+=0.2)for(const fx of [-0.11,0,0.11]){const wn=new THREE.Mesh(new THREE.PlaneGeometry(0.07,0.09),winM);wn.position.set(XA+dx+fx,GA+fy,dz+0.212);scene.add(wn);}});
+  /* works */
+  const concW=mat('#e6e1d8',{roughness:.9}),effM=mat('#4f9fb8',{roughness:.2,emissive:'#123a48',emissiveIntensity:.5,flatShading:false});
+  const pad=slab(2.9,3.4,0.06,.15,mat('#d8d3c9',{roughness:.95}));pad.position.set(XB+0.1,GB,0.15);scene.add(pad);
+  const clars=[];[[XB-0.5,-0.95,0.66],[XB+0.9,-1.05,0.55]].forEach(([x,z,r])=>{const c=new THREE.Mesh(new THREE.CylinderGeometry(r,r,0.34,40),concW);c.position.set(x,GB+0.17,z);c.castShadow=c.receiveShadow=true;scene.add(c);
+    const w=new THREE.Mesh(new THREE.CircleGeometry(r-0.07,40),effM);w.rotation.x=-Math.PI/2;w.position.set(x,GB+0.3,z);scene.add(w);
+    const br=new THREE.Mesh(new THREE.BoxGeometry(r*2-0.1,0.06,0.1),mat('#2c3036'));br.position.set(x,GB+0.38,z);scene.add(br);clars.push(br);});
+  const inlet=new THREE.Mesh(new THREE.BoxGeometry(0.62,0.42,0.62),concW);inlet.position.set(XB-0.4,GB+0.21,0.85);inlet.castShadow=true;scene.add(inlet);
+  const bldg=new THREE.Mesh(new THREE.BoxGeometry(0.95,0.6,0.7),mat('#f2efe9',{roughness:.8}));bldg.position.set(XB+0.9,GB+0.3,0.55);bldg.castShadow=true;scene.add(bldg);
+  const broof=new THREE.Mesh(new THREE.BoxGeometry(1.0,0.08,0.75),mat('#2C67D6'));broof.position.set(XB+0.9,GB+0.64,0.55);scene.add(broof);
+  /* pipe + valve */
+  const pipeM=mat('#c7ccd1',{roughness:.3,metalness:.55,flatShading:false});
+  const y0=GA+0.3,x0=XA+0.45+R;const pts=[new THREE.Vector3(x0,y0,ZT),new THREE.Vector3(XB-0.4,y0,ZT),new THREE.Vector3(XB-0.4,GB+0.42,ZT)];
+  const path=new THREE.CurvePath();for(let k=1;k<pts.length;k++)path.add(new THREE.LineCurve3(pts[k-1],pts[k]));
+  const tubeM=new THREE.Mesh(new THREE.TubeGeometry(path,80,0.09,14,false),pipeM);tubeM.castShadow=true;scene.add(tubeM);
+  const jt=new THREE.Mesh(new THREE.SphereGeometry(0.11,16,12),pipeM);jt.position.copy(pts[1]);scene.add(jt);
+  const eff=new THREE.CurvePath();[[XB+0.9,GB+0.2,-0.4],[XB+0.9,GB+0.2,3.2],[XB+0.9,RIV+0.02,3.2]].reduce((a,b)=>{const A=new THREE.Vector3(...a),B=new THREE.Vector3(...b);eff.add(new THREE.LineCurve3(A,B));return b;});
+  scene.add(new THREE.Mesh(new THREE.TubeGeometry(eff,60,0.07,10,false),effM));
+  const vg=new THREE.Group();vg.position.set(x0+0.55,y0,ZT);scene.add(vg);
+  const body=new THREE.Mesh(new THREE.SphereGeometry(0.2,20,14),mat('#3b4048',{roughness:.4,metalness:.4,flatShading:false}));body.scale.set(1.25,1,1);vg.add(body);
+  const stem=new THREE.Mesh(new THREE.CylinderGeometry(0.035,0.035,0.34,10),pipeM);stem.position.y=0.3;vg.add(stem);
+  const wheel=new THREE.Group();wheel.position.y=0.5;vg.add(wheel);const wm=mat(TC,{emissive:TC,emissiveIntensity:.35,flatShading:false,roughness:.35});
+  const tor=new THREE.Mesh(new THREE.TorusGeometry(0.3,0.055,12,40),wm);tor.rotation.x=Math.PI/2;wheel.add(tor);
+  for(let k=0;k<4;k++){const sp=new THREE.Mesh(new THREE.BoxGeometry(0.58,0.045,0.06),wm);sp.rotation.y=k*Math.PI/4;wheel.add(sp);}
+  const partG=new THREE.SphereGeometry(0.06,8,8),partM=new THREE.MeshBasicMaterial({color:lin('#e9e4c4')});
+  const inst=new THREE.InstancedMesh(partG,partM,28);inst.frustumCulled=false;scene.add(inst);
+  const effInst=new THREE.InstancedMesh(partG,new THREE.MeshBasicMaterial({color:lin('#bfe9f5')}),12);effInst.frustumCulled=false;scene.add(effInst);
+  /* clouds */
+  const cloudM=mat('#e8ecf3',{roughness:1});const clouds=[];
+  for(let k=0;k<5;k++){const c=new THREE.Group();for(let j=0;j<4;j++){const p=new THREE.Mesh(new THREE.IcosahedronGeometry(0.6+Math.random()*0.5,1),cloudM);p.position.set(j*0.7-1.2,Math.random()*0.3,(Math.random()-.5)*0.6);c.add(p);}
+    c.position.set(-6+k*3.2,5.2+Math.random()*0.6,-1.5+Math.random()*2);c.userData.v=0.12+Math.random()*0.15;scene.add(c);clouds.push(c);}
+  /* rain + particles */
+  const NR=600,rgeo=new THREE.BufferGeometry(),rpos=new Float32Array(NR*6);rgeo.setAttribute('position',new THREE.BufferAttribute(rpos,3));
+  const rain=new THREE.LineSegments(rgeo,new THREE.LineBasicMaterial({color:lin('#cfe3ff'),transparent:true,opacity:.75}));rain.frustumCulled=false;scene.add(rain);
+  const drops=[],gey=[],NS=200;const gyInst=new THREE.InstancedMesh(new THREE.SphereGeometry(0.07,6,6),mat('#8f8a66',{flatShading:false}),NS);gyInst.frustumCulled=false;scene.add(gyInst);
+  /* labels */
+  const mk=(cls,html)=>{const d=document.createElement('div');d.className='lab '+cls;d.innerHTML=html||'';ovT.appendChild(d);return d;};
+  const Lov=mk('ovl',''),Lwname=mk('nm cw','Works'),Lwov=mk('ovl',''),Ltank=mk('nm ct','Tank'),Lpct=mk('pct',''),Lrain=mk('rn',''),Lvalve=mk('vl',''),Lworks=mk('riv',''),Lclock=mk('hudt','');
+  const tmp=new THREE.Vector3();
+  const place=(el,v,dx,dy)=>{tmp.copy(v).project(cam);el.style.transform='translate('+((tmp.x*.5+.5)*stageT.clientWidth+(dx||0)).toFixed(1)+'px,'+((-tmp.y*.5+.5)*stageT.clientHeight+(dy||0)).toFixed(1)+'px) translate(-50%,-50%)';};
+  function resize(){const w=stageT.clientWidth,h=stageT.clientHeight||Math.round(w*380/640);renderer.setSize(w,h,false);renderer.domElement.style.width=w+'px';renderer.domElement.style.height=h+'px';stageT.style.setProperty('--u',(w/640).toFixed(3));cam.aspect=w/h;cam.updateProjectionMatrix();}
+  resize();window.addEventListener('resize',resize);
+  const M4=new THREE.Matrix4(),Q=new THREE.Quaternion(),S1=new THREE.Vector3(1,1,1),S0=new THREE.Vector3(0,0,0),P3=new THREE.Vector3(),SV=new THREE.Vector3();
+  let ang=0,vel=0,ph=0,eph=0,sky=0,lastV=-1,_k='';
+  T3={update(now,dt,st){const tt=now/1000;
+    sky+=((Math.min(1,st.rain/40))-sky)*Math.min(1,dt*1.5);stageT.style.setProperty('--storm',sky.toFixed(3));
+    if(!reduce)cam.position.set(CAM0.x+Math.sin(tt*0.13)*0.4,CAM0.y+Math.sin(tt*0.21)*0.15,CAM0.z);cam.lookAt(LOOK);
+    hemi.intensity=0.95-sky*0.35;sun.intensity=1.35-sky*0.75;cloudM.color.copy(lin('#e8ecf3')).lerp(lin('#59606e'),sky);
+    clouds.forEach(c=>{c.position.x+=dt*c.userData.v*(1+sky*2);if(c.position.x>9)c.position.x=-8;});
+    const f=Math.max(0.0001,Math.min(1,st.S/TCAP)),hh=H*f;water.scale.y=hh;water.visible=f>0.003;surf.position.y=0.16+hh+0.003;surf.visible=f>0.003;
+    const pulse=.5+.5*Math.sin(now*0.014);ringM.emissive.copy(lin(st.over?'#ff3b2e':TC));ringM.emissiveIntensity=st.over?0.7+1.1*pulse:0.35;
+    if(st.over&&!reduce){for(let k=0;k<4;k++)if(gey.length<NS&&Math.random()<dt*40)gey.push({p:new THREE.Vector3(XA+0.45+(Math.random()-.5)*0.7,GA+0.16+H,ZT+R*0.9),v:new THREE.Vector3((Math.random()-.5)*0.3,0.6+Math.random()*0.5,1.5+Math.random()*0.8),life:1.7});}
+    if(st.byp&&!reduce){for(let k=0;k<4;k++)if(gey.length<NS&&Math.random()<dt*40)gey.push({p:new THREE.Vector3(XB-0.4+(Math.random()-.5)*0.4,GB+0.1,2.75),v:new THREE.Vector3((Math.random()-.5)*0.3,0.4,1.1+Math.random()*0.5),life:1.1});}
+    const o=st.v/4;const target=o*Math.PI*2;vel+=((target-ang)*90-vel*12)*dt;ang+=vel*dt;wheel.rotation.y=ang;
+    ph+=dt*(0.22+st.rel*0.022);const n=st.rel>0.3?Math.min(28,Math.max(3,Math.round(st.rel/1.4))):0;
+    for(let k=0;k<28;k++){if(k<n){path.getPointAt((ph+k/n)%1,P3);M4.compose(P3,Q,S1);}else M4.compose(P3.set(0,-99,0),Q,S0);inst.setMatrixAt(k,M4);}inst.instanceMatrix.needsUpdate=true;
+    const tq=Math.min(st.rel,TWORKS);eph+=dt*(0.3+tq*0.02);const en=tq>0.3?Math.max(3,Math.round(tq/1.8)):0;
+    for(let k=0;k<12;k++){if(k<en){eff.getPointAt((eph+k/en)%1,P3);M4.compose(P3,Q,S1);}else M4.compose(P3.set(0,-99,0),Q,S0);effInst.setMatrixAt(k,M4);}effInst.instanceMatrix.needsUpdate=true;
+    clars.forEach((c,k)=>c.rotation.y+=dt*(0.25+k*0.08));
+    if(!reduce){let nn=st.rain*2.4*dt;while(nn>0){if(Math.random()<nn&&drops.length<NR){const x=XA-1.6+Math.random()*3.2,z=-1.9+Math.random()*4.6;const dx=x-(XA+0.45),dz=z-ZT;drops.push({x,y:GA+4.5+Math.random()*2,z,v:11+Math.random()*4,inT:dx*dx+dz*dz<R*R});}nn-=1;}}
+    for(let d=drops.length-1;d>=0;d--){const q=drops[d];q.y-=q.v*dt;if(q.y<(q.inT?GA+0.16+hh:GA))drops.splice(d,1);}
+    let k=0;for(const q of drops){rpos[k++]=q.x;rpos[k++]=q.y;rpos[k++]=q.z;rpos[k++]=q.x-0.03;rpos[k++]=q.y+0.38;rpos[k++]=q.z;}rgeo.attributes.position.needsUpdate=true;rgeo.setDrawRange(0,drops.length*2);
+    for(let j=gey.length-1;j>=0;j--){const s=gey[j];s.life-=dt;s.v.y-=7*dt;s.p.addScaledVector(s.v,dt);if(s.life<=0)gey.splice(j,1);}
+    for(let j=0;j<NS;j++){if(j<gey.length){SV.setScalar(Math.max(0.2,Math.min(1,gey[j].life*2)));M4.compose(gey[j].p,Q,SV);}else M4.compose(P3.set(0,-99,0),Q,S0);gyInst.setMatrixAt(j,M4);}gyInst.instanceMatrix.needsUpdate=true;
+    const ra=rg.attributes.position.array;for(let j=0;j<ra.length;j+=3){ra[j+1]=Math.sin(rbase[j]*2-tt*1.4)*0.05+Math.sin(rbase[j+2]*3+tt*1.1)*0.03;}rg.attributes.position.needsUpdate=true;rg.computeVertexNormals();
+    riverMat.color.copy(lin(st.byp||st.over?'#7d8a6a':'#3d93cf'));const kA=lifeA.update(dt,tt,st.over),kB=lifeB.update(dt,tt,st.byp);
+    /* labels */
+    place(Ltank,tmp.set(XA-0.6,GA,2.7),0,8);place(Lov,tmp.set(XA-0.6,GA,2.7),0,32);place(Lwname,tmp.set(XB,GB,2.7),0,8);place(Lwov,tmp.set(XB,GB,2.7),0,32);
+    [[Lov,st.runO],[Lwov,st.runB]].forEach(([el,v])=>{const k=v.toFixed(1);if(el._k!==k){el._k=k;el.textContent=v>0.05?k+' ML overflow':'No overflow';el.classList.toggle('has',v>0.05);el.classList.toggle('zero',v<=0.05);}});const tk=st.over?'Tank<span class="ovf">overflowing</span>':'Tank';if(Ltank._k!==tk){Ltank._k=tk;Ltank.innerHTML=tk;}
+    place(Lpct,tmp.set(XA+0.45,GA+0.16+H*0.45,ZT+R+0.05));Lpct.textContent=Math.round(f*100)+'%';
+    place(Lrain,tmp.set(XA+0.45-R-0.1,GA+H+0.55,ZT));if(Lrain._r!==st.rain){Lrain._r=st.rain;Lrain.innerHTML=st.rain?'<span class="drop"></span>+'+st.rain+' ML/h':'';Lrain.style.opacity=st.rain?1:0;}
+    place(Lvalve,tmp.set(x0+0.55,y0+1.05,ZT));if(lastV!==st.v){lastV=st.v;Lvalve.innerHTML='<span class="mm"><i style="height:'+(st.v*25)+'%;background:'+TC+'"></i></span><b>'+tlabel(st.v)+'</b>';}
+    place(Lworks,tmp.set(XB+0.6,GB+0.9,-1.4),0,-14);const wk=st.byp?'Works overflowing '+Math.max(1,Math.round(st.rel-TWORKS))+' ML/h':'Treatment works <b>'+Math.round(tq)+' of 20 ML/h</b>';
+    if(_k!==wk){_k=wk;Lworks.innerHTML=wk;Lworks.classList.toggle('over',st.byp);}
+    Lclock.textContent=st.done?'End':'Hour '+(st.h+1);
+    renderer.render(scene,cam);}};
+}
+
+/* ---------------- one-tank tutorial ---------------- */
+const TIN=[10,18,30,40,40,28,16,8,4,2,0,0],TCAP=100,TQMAX=34,TWORKS=20;
+const TWID=TQMAX*MLH/(CFG.cd*CFG.gateH*Math.sqrt(2*GRAV*(CFG.crest-CFG.gateH/2)));
+let TV=Array(T).fill(2),tres=null;const tdone=[false,false,false];
+function sim1(v){let S=0,ov=0,by=0;const log=[];
+  for(let t=0;t<T;t++){let o=0,b=0,r=0;
+    for(let k=0;k<60;k++){S+=TIN[t]/60;if(S>TCAP){o+=S-TCAP;S=TCAP;}
+      const ho=v[t]/(L-1)*CFG.gateH;
+      if(ho>0&&S>0){const d=CFG.crest*S/TCAP;const Q=d>=ho?CFG.cd*TWID*ho*Math.sqrt(2*GRAV*(d-ho/2)):CFG.cd*TWID*d*Math.sqrt(GRAV*d);
+        const q=Math.min(S,Q/MLH/60);S-=q;r+=q;b+=Math.max(0,q-TWORKS/60);}}
+    ov+=o;by+=b;log.push({S,o,b,r});}
+  return {ov,by,spill:ov+by,log};}
+const tlabel=v=>v===0?'Closed':v===4?'Open':(v*25)+'%';
+function buildTut(){const tb=$('tutTT');let h='<thead><tr><th class="rowh"></th>';for(let t=0;t<T;t++)h+='<th data-h="'+t+'">'+(t+1)+'</th>';
+  h+='</tr></thead><tbody><tr class="infl"><th class="rowh small" style="font-weight:400;color:#9fc6ea"><span class="rh"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17h10a4 4 0 0 0 .6-7.96A6 6 0 0 0 6.2 9.1 4 4 0 0 0 7 17z" fill="#9fc6ea"/><path d="M9 19l-1 2M13 19l-1 2M17 19l-1 2" stroke="#9fc6ea" stroke-width="1.6" stroke-linecap="round"/></svg>Rain</span></th>';for(let t=0;t<T;t++)h+='<td>+'+TIN[t]+'</td>';
+  h+='</tr><tr class="rT"><th class="rowh small" style="font-weight:700"><span class="rh"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4.2" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M12 3v8M8 7h8" stroke="#fff" stroke-width="1.4"/><path d="M12 11v3" stroke="#fff" stroke-width="1.8"/><rect x="2" y="14" width="20" height="6" rx="1.5" fill="#5FB0E6"/><rect x="9" y="13" width="6" height="8" rx="1" fill="#fff"/></svg>Valve</span></th>';
+  for(let t=0;t<T;t++)h+='<td><button class="cell" data-t="'+t+'"><span class="fill"></span><span class="ticks"></span><span class="half up">&#9650;</span><span class="half dn">&#9660;</span><span class="pc"></span><span class="sp"></span><span class="bp"></span></button></td>';
+  tb.innerHTML=h+'</tr></tbody>';
+  const setT=(b,nv,anim)=>{const t=+b.dataset.t;nv=Math.max(0,Math.min(L-1,nv));if(nv===TV[t]){if(anim){b.classList.remove('nope');void b.offsetWidth;b.classList.add('nope');}return;}
+    TV[t]=nv;if(anim){b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');}tutCommit();};
+  let dr=null;
+  tb.addEventListener('pointerdown',e=>{const b=e.target.closest('.cell');if(!b)return;dr={b,y:e.clientY,v0:TV[+b.dataset.t],moved:false,mouse:e.pointerType!=='touch'};if(dr.mouse){b.setPointerCapture(e.pointerId);e.preventDefault();}});
+  tb.addEventListener('pointermove',e=>{if(!dr||!dr.mouse)return;const dy=dr.y-e.clientY;if(Math.abs(dy)>6)dr.moved=true;if(dr.moved)setT(dr.b,dr.v0+Math.round(dy/14),false);});
+  tb.addEventListener('pointerup',e=>{if(!dr)return;const d=dr;dr=null;if(d.moved)return;const r=d.b.getBoundingClientRect();setT(d.b,TV[+d.b.dataset.t]+((e.clientY-r.top)<r.height/2?1:-1),true);});
+  tb.addEventListener('pointercancel',()=>{dr=null;});
+  tb.addEventListener('click',e=>{if(e.target.closest('.cell'))e.preventDefault();});
+  tb.addEventListener('keydown',e=>{const b=e.target.closest('.cell');if(!b)return;const t=+b.dataset.t;
+    if(e.key==='ArrowUp'||e.key==='Enter'||e.key===' '){e.preventDefault();setT(b,TV[t]+1,true);}else if(e.key==='ArrowDown'){e.preventDefault();setT(b,TV[t]-1,true);}});
+  document.querySelectorAll('[data-tp]').forEach(b=>b.addEventListener('click',()=>{TV=Array(T).fill(+b.dataset.tp);tutCommit();}));
+  $('toFull').addEventListener('click',()=>$('simh').scrollIntoView({behavior:reduce?'auto':'smooth'}));
+  $('tAnswer').addEventListener('click',()=>{TV=[1,3,3,3,2,2,2,2,1,2,0,0];tutCommit();tPlayhead=0;tPlaying=!reduce;$('tPlay').textContent=tPlaying?'Pause':'Play';
+    const el=$('tAnsTxt');el.style.display='';el.textContent='One answer: open to 75% in hours 2 to 4 to start draining before the peak arrives, hold 50% through the peak so the works stays at or under 20 ML/h, then ease off as the tank empties. Watch it play: no overflow, no works overflow.';});
+  $('tCopy').addEventListener('click',()=>copy(TV.join(''),$('tToast')));
+  $('tLoad').addEventListener('click',()=>{const d=$('tPaste').value.replace(/[^0-4]/g,'');if(d.length!==12){$('tErr').textContent='Enter exactly 12 digits, each from 0 to 4.';return;}$('tErr').textContent='';TV=d.split('').map(Number);tutCommit();});
+  $('tPaste').addEventListener('input',()=>$('tErr').textContent='');
+  /* static scene */
+  const s=$('tutSvg');s.innerHTML=`
+  <defs><clipPath id="tclip"><rect x="62" y="70" width="110" height="130"/></clipPath></defs>
+  <rect x="0" y="212" width="360" height="38" fill="#3d93cf"/><text x="350" y="240" text-anchor="end" font-size="13" font-weight="700" fill="#fff">River</text>
+  <rect x="0" y="200" width="360" height="12" fill="#86c56a"/>
+  <g id="tRain"></g>
+  <rect x="62" y="70" width="110" height="130" fill="#141414"/>
+  <rect id="tWater" x="62" y="200" width="110" height="0" fill="#8f8a66" clip-path="url(#tclip)"/>
+  <path d="M60 68 V202 H174 V68" fill="none" stroke="#fff" stroke-width="3"/>
+  <text id="tPct" x="117" y="140" text-anchor="middle" font-size="18" font-weight="700" fill="#fff">0%</text>
+  <text x="117" y="62" text-anchor="middle" font-size="13" font-weight="700" fill="#14161c" id="tRainTxt"></text>
+  <path id="tOver" d="M62 70 C40 76 34 120 30 212" fill="none" stroke="#FF4B3E" stroke-width="7" stroke-dasharray="10 6" opacity="0"/>
+  <text id="tOverTxt" x="6" y="52" font-size="13" font-weight="700" fill="#FF4B3E" opacity="0">Overflow</text>
+  <path d="M174 186 H262 V170" fill="none" stroke="#c7ccd1" stroke-width="7"/>
+  <path id="tFlow" d="M174 186 H262 V170" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="4 8" opacity="0"/>
+  <g transform="translate(220,186)"><circle r="13" fill="#000" stroke="#c7ccd1" stroke-width="3"/><rect x="-4" y="-9" width="8" height="18" fill="#333"/><rect id="tVfill" x="-4" y="9" width="8" height="0" fill="#5FB0E6"/></g>
+  <text id="tVtxt" x="222" y="164" text-anchor="middle" font-size="12" font-weight="700" fill="#14161c">Closed</text>
+  <rect x="232" y="104" width="110" height="66" rx="6" fill="#f2efe9" stroke="#14161c" stroke-width="2"/>
+  <text x="287" y="123" text-anchor="middle" font-size="13" font-weight="700" fill="#14161c">Treatment works</text>
+  <rect x="246" y="134" width="82" height="12" rx="3" fill="#ddd"/><rect id="tWbar" x="246" y="134" width="0" height="12" rx="3" fill="#2C67D6"/>
+  <text id="tWtxt" x="287" y="162" text-anchor="middle" font-size="12" fill="#14161c">0 of 20 ML/h</text>
+  <path id="tBy" d="M342 150 C356 170 356 196 352 212" fill="none" stroke="#FF4B3E" stroke-width="7" stroke-dasharray="10 6" opacity="0"/>
+  <text id="tByTxt" x="352" y="98" text-anchor="end" font-size="13" font-weight="700" fill="#FF4B3E" opacity="0">Overflow</text>
+  <text id="tClock" x="10" y="22" font-size="13" font-weight="700" fill="#14161c">Hour 1</text>`;
+  const rg=$('tRain');let rh='';for(let k=0;k<16;k++)rh+='<line x1="0" y1="0" x2="-2" y2="9" stroke="#3d6fa3" stroke-width="2" stroke-linecap="round"/>';rg.innerHTML=rh;
+}
+function tutCommit(){tres=sim1(TV);
+  document.querySelectorAll('#tutTT .cell').forEach(b=>{const t=+b.dataset.t,v=TV[t];b.querySelector('.fill').style.height=(v/(L-1)*100)+'%';b.querySelector('.pc').textContent=tlabel(v);
+    b.classList.toggle('max',v===L-1);b.classList.toggle('min',v===0);b.classList.toggle('spill',tres.log[t].o>0.01);b.classList.toggle('byp',tres.log[t].b>0.01);
+    b.setAttribute('aria-label','Hour '+(t+1)+', valve '+tlabel(v)+(tres.log[t].o>0.01?', tank overflows':'')+(tres.log[t].b>0.01?', works overflows':''));});
+  $('tCode').value=TV.join('');
+  const sp=Math.round(tres.spill*10)/10;$('tSpill').textContent=sp.toFixed(1);$('tSpill').classList.toggle('zero',sp<0.05);
+  $('tSplit').textContent='Tank overflow '+tres.ov.toFixed(1)+' ML, works overflow '+tres.by.toFixed(1)+' ML';
+  const all=v=>TV.every(x=>x===v);
+  const msgs=['The tank fills up and overflows to the river: '+sim1(Array(T).fill(0)).ov.toFixed(0)+' ML.','The tank never fills, but it sends more than 20 ML/h, so the works overflows '+sim1(Array(T).fill(4)).by.toFixed(1)+' ML.','That\'s the whole game: release before the peak, keep the works busy, never over 20 ML/h. Now do it with four tanks.'];
+  if(all(0))tdone[0]=true;if(all(4))tdone[1]=true;if(sp<0.05)tdone[2]=true;
+  document.querySelectorAll('#goals li').forEach(li=>{const g=+li.dataset.g;li.classList.toggle('done',tdone[g]);li.querySelector('em').textContent=tdone[g]?msgs[g]:(g===2&&tdone[0]&&tdone[1]&&!tdone[2]?'Hint: all half open gets close. Try opening more in the early hours.':'');});
+  $('toFull').style.display=tdone[2]?'':'none';
+  if(reduce)tutFrame(performance.now());}
+let tPlayhead=0,tPlaying=!reduce,tLast=0,tVis=true;
+function tutFrame(now){const dt=Math.min(0.05,(now-tLast)/1000||0);tLast=now;if(!tres)return;
+  if(tPlaying){tPlayhead+=dt/1.0;if(tPlayhead>T+1.2)tPlayhead=0;$('tHour').value=Math.min(T,tPlayhead);}
+  const done=tPlayhead>=T,h=Math.min(T-1,Math.floor(tPlayhead)),f=Math.min(1,tPlayhead-h);
+  const a=h===0?0:tres.log[h-1].S,b=tres.log[h].S,S=done?tres.log[T-1].S:a+(b-a)*(f*f*(3-2*f));
+  const lv=S/TCAP;$('tWater').setAttribute('y',200-130*lv);$('tWater').setAttribute('height',130*lv);$('tPct').textContent=Math.round(lv*100)+'%';
+  const L0=done?null:tres.log[h];const rel=L0?L0.r:0,ovr=L0&&L0.o>0.01,byp=L0&&L0.b>0.01,v=done?0:TV[h];
+  $('tVfill').setAttribute('y',9-18*v/4);$('tVfill').setAttribute('height',18*v/4);$('tVtxt').textContent='Valve '+tlabel(v);
+  $('tFlow').setAttribute('opacity',rel>0.3?1:0);$('tFlow').setAttribute('stroke-dashoffset',-(now/40)%12);
+  const tq=Math.min(rel,TWORKS);$('tWbar').setAttribute('width',82*Math.min(1,rel/TWORKS));$('tWbar').setAttribute('fill',byp?'#FF4B3E':'#2C67D6');
+  $('tWtxt').textContent=byp?Math.round(rel)+' in, '+Math.round(L0.b)+' overflowing':Math.round(tq)+' of 20 ML/h';
+  ['tOver','tOverTxt'].forEach(id=>$(id).setAttribute('opacity',ovr?1:0));['tBy','tByTxt'].forEach(id=>$(id).setAttribute('opacity',byp?1:0));
+  $('tOver').setAttribute('stroke-dashoffset',-(now/30)%16);$('tBy').setAttribute('stroke-dashoffset',-(now/30)%16);
+  const rin=done?0:TIN[h];$('tRainTxt').textContent=rin?'Rain +'+rin+' ML/h':'';
+  const lines=$('tRain').children;for(let k=0;k<lines.length;k++){const on=k<Math.ceil(rin/2.6);const x=66+(k*7.3)%104,y=((now/6+k*37)%60);lines[k].setAttribute('transform','translate('+x+','+(6+y)+')');lines[k].setAttribute('opacity',on?0.9:0);}
+  $('tClock').textContent=done?'End of storm':'Hour '+(h+1);$('tHourLbl').textContent=done?'End':'Hour '+(h+1);
+  document.querySelectorAll('#tutTT .cell').forEach(c=>c.classList.toggle('now',!done&&+c.dataset.t===h));
+  let rO=0,rB=0;const phR=Math.min(tPlayhead,T);for(let t=0;t<T;t++){const w=t<Math.floor(phR)?1:t===Math.floor(phR)?phR-t:0;if(!w)break;rO+=tres.log[t].o*w;rB+=tres.log[t].b*w;}
+  $('tRunTot').textContent=(rO+rB).toFixed(1);$('tRunFine').textContent=Math.round((rO+rB)*CFG.fine).toLocaleString();$('tPlanTot').textContent=tres.spill.toFixed(1);
+  if(T3)T3.update(now,dt,{S,rel,over:!!ovr,byp:!!byp,v,rain:rin,h,done,runO:rO,runB:rB});}
+function tutLoop(now){if(tVis)tutFrame(now);requestAnimationFrame(tutLoop);}
+buildTut();
+try{initTut3D();}catch(e){T3=null;$('tstage').style.display='none';$('tutSvg').style.display='';}
+tutCommit();
+$('tPlay').addEventListener('click',()=>{tPlaying=!tPlaying;$('tPlay').textContent=tPlaying?'Pause':'Play';$('tPlay').setAttribute('aria-pressed',tPlaying);if(tPlaying&&tPlayhead>=T)tPlayhead=0;});
+$('tHour').addEventListener('input',e=>{tPlayhead=+e.target.value;tPlaying=false;$('tPlay').textContent='Play';$('tPlay').setAttribute('aria-pressed','false');if(reduce)tutFrame(performance.now());});
+if('IntersectionObserver' in window){new IntersectionObserver(es=>{tVis=es[0].isIntersecting;}).observe(T3?$('tstage'):$('tutSvg'));}
+if(reduce){tPlayhead=T;tutFrame(performance.now());}else requestAnimationFrame(t=>{tLast=t;requestAnimationFrame(tutLoop);});
+
+/* ---------------- controls ---------------- */
+$('numBtn').addEventListener('click',e=>{showNums=!showNums;e.target.textContent=showNums?'Hide details':'Show details';e.target.setAttribute('aria-pressed',showNums);if(reduce)renderOnce();});
+$('playBtn').addEventListener('click',()=>{playing=!playing;$('playBtn').textContent=playing?'Pause':'Play';$('playBtn').setAttribute('aria-pressed',playing);if(playing&&playhead>=T)playhead=0;});
+$('hour').addEventListener('input',e=>{playhead=+e.target.value;if(playing){playing=false;$('playBtn').textContent='Play';$('playBtn').setAttribute('aria-pressed','false');}if(reduce)renderOnce();});
+document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>{const p=b.dataset.preset;
+  V=[0,1,2,3].map(i=>Array.from({length:T},(_,t)=>p==='open'?4:p==='closed'?0:p==='half'?2:p==='bottom'?(t>=3-i?4:0):Math.floor(Math.random()*L)));commit(true);}));
+function setLevel(k){level=k;document.querySelectorAll('.stop').forEach(s=>{const on=+s.dataset.go===k;s.classList.toggle('on',on);s.setAttribute('aria-selected',on);});
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',+p.dataset.panel===k));}
+document.querySelectorAll('.stop').forEach(s=>s.addEventListener('click',()=>{setLevel(+s.dataset.go);if(s.closest('section').getAttribute('aria-labelledby')==='title')$('lvh').scrollIntoView({behavior:reduce?'auto':'smooth'});}));
+
+/* brief */
+/* ---------------- agent levels ---------------- */
+const PROBLEM=[...document.querySelectorAll('.probtext p, .probtext li')].map(e=>(e.tagName==='LI'?'- ':'')+e.textContent.trim()).join('\n');
+$('copyBrief').addEventListener('click',()=>copy(PROBLEM,$('briefToast')));
+$('copyProb').addEventListener('click',()=>copy(PROBLEM,$('probToast')));
+$('toolsPrompt').value=`Attached is a sensor log from our combined sewer during a 12-hour storm, one row per hour. It has the runoff into each of four storage tanks, the upstream sewer flow into tank 1, each tank's level, the valve settings we used (0 = closed up to 4 = fully open), the flow through each valve, the overflow from each tank, and the flow sent to the treatment plant, which can treat about 20 ML/h (anything above that overflows).
+1. Plot the data so we can see how the storm moves through the system.
+2. Investigate: where and when does it overflow, and why? Is any storage or treatment capacity going unused?
+3. Write a short report of your findings.
+4. Based on the data, suggest new valve settings and explain your reasoning. Give the plan as four groups of twelve digits separated by dashes, tank 1 first, one digit per hour (0 = closed, 1 = 25%, 2 = 50%, 3 = 75%, 4 = open), for example 222222222222-222222222222-222222222222-222222222222.`;
+$('copyToolsPrompt').addEventListener('click',()=>copy($('toolsPrompt').value,$('toolsToast')));
+$('loopPrompt').value=`This folder has the utility's calibrated hydraulic model of our combined sewer. Read the instructions in the folder first.
+Goal: find the valve plan with the least total overflow to the river.
+Run the model, look at where and when it overflows, and try changes that reduce it. Keep a log of what you try. Keep going: when you stop finding improvements, try a different approach before you stop.
+At the end, give me the best plan, its total overflow, and a short explanation of the strategy. Give the plan as four groups of twelve digits separated by dashes, tank 1 first, one digit per hour (0 = closed, 1 = 25%, 2 = 50%, 3 = 75%, 4 = open), for example 222222222222-222222222222-222222222222-222222222222.`;
+$('copyLoopPrompt').addEventListener('click',()=>copy($('loopPrompt').value,$('loopToast')));
+function sensorLog(){const f=x=>x.toFixed(1);let h=['hour','runoff_t1_ML','runoff_t2_ML','runoff_t3_ML','runoff_t4_ML','upstream_to_t1_ML'];
+  for(let i=1;i<=4;i++)h.push('level_t'+i+'_pct');for(let i=1;i<=4;i++)h.push('valve_t'+i+'_setting');for(let i=1;i<=4;i++)h.push('valve_flow_t'+i+'_ML');
+  for(let i=1;i<=4;i++)h.push('overflow_t'+i+'_ML');h.push('flow_to_works_ML','works_overflow_ML');let out=h.join(',')+'\n';
+  for(let t=0;t<T;t++){const g=res.log[t];const r=[t+1,RAIN[0][t],RAIN[1][t],RAIN[2][t],RAIN[3][t],INFLOW[t]];
+    for(let i=0;i<4;i++)r.push(f(100*g.S[i]/CFG.cap[i]));for(let i=0;i<4;i++)r.push(V[i][t]);for(let i=0;i<4;i++)r.push(f(g.rel[i]));
+    for(let i=0;i<4;i++)r.push(f(g.fl[i]));r.push(f(g.rel[3]-g.by),f(g.by));out+=r.join(',')+'\n';}
+  return out;}
+$('copySensors').addEventListener('click',()=>copy(sensorLog(),$('dataToast')));
+/* ---------------- system copy / load ---------------- */
+$('sysCopy').addEventListener('click',()=>copy(code(V),$('sysToast')));
+$('sysLoad').addEventListener('click',()=>{const v=parseCode($('sysPaste').value);if(!v){$('sysErr').textContent='Enter four groups of twelve digits from 0 to 4, separated by dashes.';return;}$('sysErr').textContent='';V=v;commit(true);});
+$('sysPaste').addEventListener('input',()=>$('sysErr').textContent='');
+/* ---------------- submission ---------------- */
+/* Paste the workshop form link here. If it is a pre-filled link containing PLANCODE, the plan is filled in. */
+const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdTdsrkUxdrWG7t5e70Jo-qnIXFlIU9RRj82tLFiCFnCIvLQA/viewform';
+function updateSubmit(){const a=$('subBtn');
+  if(!FORM_URL){a.setAttribute('aria-disabled','true');a.textContent='Submit (form link coming soon)';a.href='#';return;}
+  a.removeAttribute('aria-disabled');a.textContent='Copy plan and open the form';a.href=FORM_URL.replace('PLANCODE',encodeURIComponent(code(V)));}
+$('subBtn').addEventListener('click',()=>{copy(code(V),$('planToast'));});
+setInterval(updateSubmit,1000);updateSubmit();
+$('copyPlan').addEventListener('click',()=>copy(code(V),$('planToast')));
+
+/* init */
+buildTable();drawBoard();commit(false,true);shown=target;$('score').textContent=target.toLocaleString();
+if(reduce){playing=false;playhead=T;$('playBtn').textContent='Play';$('playBtn').setAttribute('aria-pressed','false');$('hour').value=T;}
+if(reduce){renderOnce();}else{requestAnimationFrame(t=>{lastT=t;requestAnimationFrame(loop);});}
+})();
+</script>
+</body>
+</html>
