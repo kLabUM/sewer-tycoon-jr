@@ -7,7 +7,7 @@
 <title>Sewer Tycoon Jr. by the Digital Water Lab</title>
 <style>
 :root{
-  --wall:#E4E3DF; --sign:#000; --ink:#fff; --mute:#A9AAAD; --rule:#fff; --dim:#262626;
+  --wall:#000; --sign:#000; --ink:#fff; --mute:#A9AAAD; --rule:#fff; --dim:#262626;
   --t1:#8E54D9; --t2:#2C67D6; --t3:#1A9A47; --t4:#F2701E; --tt:#5FB0E6; --river:#8FB8DE; --note:#FFC425; --bad:#FF4B3E; --good:#9BE7A9;
   --page-ink:#000;
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
@@ -205,6 +205,7 @@ details.fullprob summary{cursor:pointer;font-weight:700;padding:6px 0}
 .probtext{font-size:15px;max-width:80ch;color:#ddd}.probtext ul{padding-left:20px;margin:0 0 10px}.probtext li{margin:0 0 6px}.probtext p{max-width:none}
 #tt th.rowh{width:92px}#tt tr.infl td,#tt tr.infl th{vertical-align:middle;height:26px;padding-top:4px}#tt .rh .ico{width:18px;height:18px}
 a.dl{color:#9fd0ff;font-weight:700}
+html,body{background:#000}
 </style>
 </head>
 <body>
@@ -345,7 +346,7 @@ a.dl{color:#9fd0ff;font-weight:700}
   <div class="panel" data-panel="3">
     <h3>Automated research loop: let an agent run the model</h3>
     <p>The utility has shared its fully calibrated hydraulic model of this sewer. Download the model package (a small zip file), unzip it, and open the folder in Claude Code, Codex, or another coding agent. The package includes instructions the agent will read on its own.</p>
-    <div class="ctrl"><a class="btn" href="https://drive.google.com/file/d/1VHCMO9c7Qy3-oWRa9nNenK3hTpSF-lE_/view?usp=sharing" target="_blank" rel="noopener">Download the model package (.zip)</a></div>
+    <div class="ctrl"><a class="btn" href="https://github.com/kLabUM/sewer-tycoon-jr/raw/main/sewer-tycoon-jr-repo.zip" target="_blank" rel="noopener">Download the model package (.zip)</a></div>
     <p>Then give it a goal and let it work. For example:</p>
     <textarea id="loopPrompt" readonly aria-label="Example prompt for a coding agent"></textarea>
     <div class="ctrl"><button id="copyLoopPrompt">Copy prompt</button><span class="toast" id="loopToast"></span></div>
