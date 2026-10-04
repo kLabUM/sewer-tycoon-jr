@@ -5,7 +5,7 @@ See this  readme file for more advanced usecases
 Open Source, MIT License, 
 
 
-## Stretch goals (beyond the competition): build the interfaces yourself
+## Stretch goals (beyond the competition, downlaod the zip file): and build the interfaces yourself
 
 Finished the challenge, or want to go further? These extensions turn Sewer Tycoon Jr.
 into the start of your own agentic workflow. Ask your coding agent to build them; you
